@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="lo" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitqik — MY GOALS Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/libs/pptxgen.bundle.js"></script>
+<style>
+/* ── ZOOM 85% ── */
+html{zoom:0.7}
+*{box-sizing:border-box;transition:background-color .25s,color .25s,box-shadow .25s}
+[x-cloak]{display:none!important}
+body{font-family:"Noto Sans Lao","Inter",sans-serif;min-height:100vh}
+
+/* ══════════════════════════════
+   DARK MODE (default)
+══════════════════════════════ */
+:root{
+  --bg:#1a1e2e;--card:#1f2438;--soft:#252b42;--border:#2d3454;--light:#2a3050;
+  --text:#c8d0e7;--muted:#7a85a3;--primary:#F47A20;--green:#0ECB81;--rose:#F6465D;--blue:#4f8ef7;--purple:#a855f7;
+  --shadow-dark:#131726;--shadow-light:#2b3250;
+  --neu-flat:8px 8px 18px var(--shadow-dark),-8px -8px 18px var(--shadow-light);
+  --neu-inset:inset 5px 5px 11px var(--shadow-dark),inset -5px -5px 11px #23283e;
+  --neu-pressed:inset 3px 3px 8px #111420,inset -3px -3px 8px #232840;
+  --neu-btn-sh:5px 5px 12px var(--shadow-dark),-5px -5px 12px var(--shadow-light);
+}
+
+/* ══════════════════════════════
+   LIGHT MODE
+══════════════════════════════ */
+html.light{
+  --bg:#e8ecf3;--card:#dde3ee;--soft:#d0d7e6;--border:#c0c8da;--light:#cdd4e2;
+  --text:#2d3454;--muted:#6b7694;--primary:#d96510;--green:#0a9e62;--rose:#d63348;--blue:#3a6fd8;--purple:#7c3aed;
+  --shadow-dark:#b8bece;--shadow-light:#ffffff;
+  --neu-flat:8px 8px 18px var(--shadow-dark),-8px -8px 18px var(--shadow-light);
+  --neu-inset:inset 5px 5px 11px var(--shadow-dark),inset -5px -5px 11px var(--shadow-light);
+  --neu-pressed:inset 3px 3px 8px #b0b8ca,inset -3px -3px 8px #f0f4ff;
+  --neu-btn-sh:5px 5px 12px var(--shadow-dark),-5px -5px 12px var(--shadow-light);
+}
+
+body{background:var(--bg);color:var(--text)}
+
+/* ── NEU COMPONENTS ── */
+.neu-flat{background:var(--card);box-shadow:var(--neu-flat);border-radius:16px}
+.neu-inset{background:var(--bg);box-shadow:var(--neu-inset);border-radius:12px}
+.neu-card{background:var(--card);box-shadow:var(--neu-flat);border-radius:18px}
+.neu-btn{background:linear-gradient(145deg,var(--soft),var(--light));box-shadow:var(--neu-btn-sh);transition:all .18s;border:none;cursor:pointer;color:var(--muted);border-radius:12px}
+.neu-btn:hover{box-shadow:3px 3px 8px var(--shadow-dark),-3px -3px 8px var(--shadow-light);transform:translateY(1px);color:var(--text)}
+.neu-btn:active{box-shadow:var(--neu-pressed);transform:translateY(2px)}
+.neu-btn-primary{background:linear-gradient(145deg,#f58930,#d96510);box-shadow:5px 5px 12px rgba(0,0,0,.4),-5px -5px 12px rgba(244,122,32,.22);color:#fff;font-weight:700;border:none;cursor:pointer;border-radius:12px;transition:all .18s}
+.neu-btn-primary:hover{transform:translateY(-1px);box-shadow:6px 6px 14px rgba(0,0,0,.4),-6px -6px 14px rgba(244,122,32,.28)}
+.neu-btn-primary:active{transform:translateY(1px)}
+.neu-input{background:var(--bg);box-shadow:var(--neu-inset);border:none;outline:none;color:var(--text);transition:box-shadow .2s}
+.neu-input:focus{box-shadow:var(--neu-inset),0 0 0 2px rgba(244,122,32,.35)}
+.neu-badge{box-shadow:2px 2px 5px var(--shadow-dark),-2px -2px 5px var(--shadow-light);border-radius:8px}
+.neu-progress-track{background:var(--bg);box-shadow:var(--neu-inset);border-radius:99px;height:7px;overflow:hidden}
+.neu-progress-fill{height:100%;border-radius:99px;transition:width .7s ease}
+
+/* ── TABS ── */
+.neu-tab-active{background:var(--bg);box-shadow:var(--neu-inset);color:var(--primary)}
+.neu-tab-inactive{background:linear-gradient(145deg,var(--soft),var(--light));box-shadow:var(--neu-btn-sh);color:var(--muted)}
+.neu-tab-inactive:hover{color:var(--text)}
+
+/* ── M-FRAMEWORK TABS ── */
+.m-tab{padding:.35rem .9rem;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;transition:all .18s}
+.m-tab-active{background:linear-gradient(145deg,#F47A20,#d96510);color:#fff;box-shadow:3px 3px 8px rgba(0,0,0,.4)}
+.m-tab-inactive{color:var(--muted)}
+.m-tab-inactive:hover{color:var(--text)}
+
+/* ── ANIMATIONS ── */
+.tab-content{animation:fadeUp .28s ease-out}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.high-glow{animation:hglow 2.2s ease-in-out infinite}
+@keyframes hglow{0%,100%{box-shadow:var(--neu-flat)}50%{box-shadow:var(--neu-flat),0 0 16px rgba(246,70,93,.5)}}
+.kanban-card{cursor:pointer;transition:all .2s}
+.kanban-card:hover{transform:translateY(-2px);box-shadow:10px 10px 22px var(--shadow-dark),-10px -10px 22px var(--shadow-light)}
+.pillar-card-hover{transition:all .22s}
+.pillar-card-hover:hover{transform:translateY(-3px) scale(1.012)}
+.spine-anim{stroke-dasharray:1600;stroke-dashoffset:1600;animation:drawSpine 2s ease forwards}
+@keyframes drawSpine{to{stroke-dashoffset:0}}
+.toast-enter{animation:toastIn .3s ease-out}
+@keyframes toastIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.modal-enter{animation:modalIn .28s ease-out}
+@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+.neu-row:hover td{background:rgba(244,122,32,.05)}
+.row-done{opacity:.42}
+.row-done td{text-decoration:line-through}
+
+/* ── MY GOALS shimmer ── */
+.my-goals-text{
+  font-size:clamp(13px,1.6vw,18px);font-weight:800;letter-spacing:.22em;
+  background:linear-gradient(135deg,#F47A20,#ffb366,#F47A20);
+  background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;animation:shimmer 3s linear infinite
+}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{width:42px;height:24px;border-radius:99px;background:var(--bg);box-shadow:var(--neu-inset);position:relative;cursor:pointer;border:none;padding:0;display:flex;align-items:center}
+.theme-toggle-knob{width:18px;height:18px;border-radius:50%;background:linear-gradient(145deg,#F47A20,#d96510);box-shadow:2px 2px 5px rgba(0,0,0,.4);position:absolute;left:3px;transition:transform .3s ease}
+html.light .theme-toggle-knob{transform:translateX(18px)}
+
+/* ══════════════════════════════
+   WORKSHOP BOARD / STICKY NOTES
+══════════════════════════════ */
+#workshop-board{
+  background:var(--card);box-shadow:var(--neu-inset);border-radius:18px;
+  min-height:560px;position:relative;overflow:hidden;
+}
+.sticky-note{
+  width:160px;min-height:130px;border-radius:12px;padding:10px;
+  box-shadow:4px 4px 12px rgba(0,0,0,.35),-2px -2px 8px rgba(255,255,255,.05);
+  cursor:grab;user-select:none;position:absolute;
+  display:flex;flex-direction:column;gap:6px;
+  transition:box-shadow .15s,transform .1s;
+  font-size:11px;font-family:"Noto Sans Lao","Inter",sans-serif;
+}
+.sticky-note:hover{box-shadow:6px 6px 16px rgba(0,0,0,.45),-2px -2px 8px rgba(255,255,255,.08);transform:rotate(0.5deg) scale(1.02)}
+.sticky-note.dragging{cursor:grabbing;box-shadow:12px 12px 28px rgba(0,0,0,.6);transform:rotate(2deg) scale(1.06);z-index:1000;opacity:.9}
+.sticky-note textarea{
+  background:transparent;border:none;outline:none;resize:none;
+  font-size:11px;font-family:"Noto Sans Lao","Inter",sans-serif;
+  color:#2d3454;flex-grow:1;line-height:1.5;
+}
+.sticky-note .note-tag{font-size:9px;font-weight:700;opacity:.75;letter-spacing:.05em}
+.sticky-note .note-del{width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.15);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:#2d3454;flex-shrink:0;transition:background .15s}
+.sticky-note .note-del:hover{background:rgba(246,70,93,.4)}
+.sticky-colors button{width:16px;height:16px;border-radius:50%;border:none;cursor:pointer;transition:transform .15s}
+.sticky-colors button:hover{transform:scale(1.25)}
+
+/* Fishbone drop zones */
+.drop-zone{border:2px dashed transparent;border-radius:12px;transition:all .2s;min-height:60px}
+.drop-zone.drag-over{border-color:var(--primary)!important;background:rgba(244,122,32,.08)!important}
+
+/* Fishbone canvas area */
+#fishbone-canvas{position:relative;min-height:520px;border-radius:18px;overflow:visible}
+
+/* Guide step */
+.guide-step{border-left:3px solid var(--primary);padding-left:12px;margin-bottom:10px}
+
+/* Workshop toolbar */
+.workshop-toolbar{background:var(--card);box-shadow:var(--neu-flat);border-radius:14px;padding:10px 14px}
+</style>
+</head>
+<body x-data="app()" x-init="init()">
+
+<!-- TOAST -->
+<div class="fixed top-4 right-4 z-[200] space-y-2 pointer-events-none" x-cloak>
+  <template x-for="t in toasts" :key="t.id">
+    <div class="toast-enter flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold shadow-2xl pointer-events-auto neu-flat"
+         :class="t.type==='success'?'text-green-500':t.type==='error'?'text-red-500':'text-orange-400'">
+      <i :data-lucide="t.type==='success'?'check-circle-2':t.type==='error'?'x-circle':'info'" class="w-4 h-4 flex-shrink-0"></i>
+      <span x-text="t.message"></span>
+    </div>
+  </template>
+</div>
+
+<div class="flex flex-col min-h-screen">
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="sticky top-0 z-40 neu-card" style="border-radius:0 0 22px 22px">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+
+        <!-- Logo + MY GOALS -->
+        <div class="flex items-center gap-3">
+          <div class="neu-flat p-1.5 rounded-2xl flex-shrink-0">
+            <img id="logo-img" src="logo.png" alt="Bitqik" class="w-11 h-11 object-contain rounded-xl"
+                 onerror="this.onerror=null;this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAYAAAB/HSuDAAAQAElEQVR4Ae...';this.style.display='none';document.getElementById('logo-fallback').style.display='flex'"
+                 onload="document.getElementById('logo-fallback').style.display='none'">
+            <div id="logo-fallback" class="w-11 h-11 rounded-xl items-center justify-center text-white font-black text-lg" style="display:none;background:linear-gradient(135deg,#F47A20,#d96510)">B</div>
+          </div>
+          <div>
+            <div class="my-goals-text">MY GOALS</div>
+            <p class="text-[10px] mt-0.5 tracking-wide" style="color:var(--muted)">Bitqik Strategic Action Dashboard</p>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Project -->
+          <div class="neu-inset flex items-center gap-1.5 px-3 py-1.5 rounded-xl">
+            <i data-lucide="folder" class="w-3 h-3 flex-shrink-0" style="color:var(--muted)"></i>
+            <span class="text-[10px] font-semibold" style="color:var(--muted)">ໂຄງການ:</span>
+            <select x-model.number="currentProjectId" @change="changeProject()" class="bg-transparent border-0 text-[11px] font-bold outline-none cursor-pointer max-w-[140px]" style="color:var(--text)">
+              <template x-for="p in projects" :key="p.id"><option :value="p.id" x-text="p.name"></option></template>
+            </select>
+            <button @click="openAddProjectModal=true" class="neu-btn p-1 rounded-lg" style="color:var(--primary)"><i data-lucide="plus" class="w-3 h-3"></i></button>
+            <button @click="confirmDeleteProject()" class="neu-btn p-1 rounded-lg" style="color:var(--rose)" :disabled="projects.length<=1"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+          </div>
+          <!-- Progress -->
+          <div class="neu-inset px-3 py-1.5 rounded-xl flex items-center gap-2 text-[11px]">
+            <div class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:var(--green)"></div>
+            <span style="color:var(--muted)">ສຳເລັດ:</span>
+            <span class="font-bold" style="color:var(--green)" x-text="completionPct()+'%'"></span>
+            <div class="neu-progress-track w-14"><div class="neu-progress-fill" :style="`width:${completionPct()}%;background:var(--green)`"></div></div>
+          </div>
+          <!-- High priority -->
+          <div class="neu-inset px-3 py-1.5 rounded-xl flex items-center gap-2 text-[11px]">
+            <div class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:var(--rose)"></div>
+            <span style="color:var(--muted)">ຮີບດ່ວນ:</span>
+            <span class="font-bold" style="color:var(--rose)" x-text="highPriCount()"></span>
+          </div>
+          <!-- Theme toggle -->
+          <div class="flex items-center gap-2">
+            <i data-lucide="moon" class="w-3.5 h-3.5" style="color:var(--muted)" x-show="!lightMode"></i>
+            <i data-lucide="sun" class="w-3.5 h-3.5" style="color:#F47A20" x-show="lightMode"></i>
+            <button class="theme-toggle" @click="toggleTheme()"><div class="theme-toggle-knob"></div></button>
+          </div>
+          <!-- Guideline -->
+          <button @click="showGuide=true" class="neu-btn px-3.5 py-1.5 rounded-xl text-[11px] font-semibold flex items-center gap-1.5" style="color:var(--blue)">
+            <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Guideline
+          </button>
+          <!-- Export -->
+          <button @click="exportToPptx()" class="neu-btn-primary px-3.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1.5">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i> Export PPTX
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
+
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="neu-card p-4 flex items-center gap-3">
+        <div class="neu-btn p-2.5 rounded-xl" style="color:var(--primary)"><i data-lucide="list-todo" class="w-5 h-5"></i></div>
+        <div><p class="text-2xl font-bold" style="color:var(--text)" x-text="curItems().length"></p><p class="text-[10px]" style="color:var(--muted)">ໜ້າວຽກທັງໝົດ</p></div>
+      </div>
+      <div class="neu-card p-4 flex items-center gap-3">
+        <div class="neu-btn p-2.5 rounded-xl" style="color:var(--green)"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>
+        <div><p class="text-2xl font-bold" style="color:var(--green)" x-text="curItems().filter(i=>i.completed).length"></p><p class="text-[10px]" style="color:var(--muted)">ສຳເລັດ</p></div>
+      </div>
+      <div class="neu-card p-4 flex items-center gap-3">
+        <div class="neu-btn p-2.5 rounded-xl" style="color:var(--rose)"><i data-lucide="alert-circle" class="w-5 h-5"></i></div>
+        <div><p class="text-2xl font-bold" style="color:var(--rose)" x-text="highPriCount()"></p><p class="text-[10px]" style="color:var(--muted)">ຮີບດ່ວນ High</p></div>
+      </div>
+      <div class="neu-card p-4 flex items-center gap-3">
+        <div class="neu-btn p-2.5 rounded-xl" style="color:var(--blue)"><i data-lucide="sticky-note" class="w-5 h-5"></i></div>
+        <div><p class="text-2xl font-bold" style="color:var(--blue)" x-text="stickyNotes.length"></p><p class="text-[10px]" style="color:var(--muted)">Sticky Notes</p></div>
+      </div>
+    </div>
+
+    <!-- MAIN TABS -->
+    <div class="neu-card p-1.5 flex gap-1.5 overflow-x-auto rounded-2xl w-fit">
+      <template x-for="tab in mainTabs" :key="tab.id">
+        <button @click="activeTab=tab.id" :class="activeTab===tab.id?'neu-tab-active':'neu-tab-inactive'" class="px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all whitespace-nowrap">
+          <i :data-lucide="tab.icon" class="w-3.5 h-3.5"></i><span x-text="tab.label"></span>
+        </button>
+      </template>
+    </div>
+
+    <!-- ─── TAB: OVERVIEW ─── -->
+    <div x-show="activeTab==='overview'" class="tab-content space-y-4">
+      <div class="neu-card p-4 flex flex-col md:flex-row gap-3 items-center justify-between rounded-2xl">
+        <div class="flex flex-wrap gap-2 w-full md:w-auto">
+          <select x-model="fCat" class="neu-input rounded-xl px-3 py-1.5 text-xs cursor-pointer">
+            <option value="All">ທຸກໝວດ</option>
+            <template x-for="p in activePillars" :key="p.name"><option :value="p.name" x-text="p.name"></option></template>
+          </select>
+          <select x-model="fPri" class="neu-input rounded-xl px-3 py-1.5 text-xs cursor-pointer">
+            <option value="All">ທຸກລະດັບ</option><option value="High">High</option><option value="Medium">Medium</option>
+          </select>
+          <select x-model="fPhase" class="neu-input rounded-xl px-3 py-1.5 text-xs cursor-pointer">
+            <option value="All">ທຸກໄລຍະ</option><option value="Phase 1">Phase 1</option><option value="Phase 2">Phase 2</option><option value="Phase 3">Phase 3</option>
+          </select>
+        </div>
+        <div class="flex w-full md:w-auto gap-2">
+          <input type="text" x-model="fSearch" placeholder="ຄົ້ນຫາ..." class="neu-input flex-grow md:w-40 rounded-xl px-3 py-1.5 text-xs">
+          <button @click="openAddModal=true" class="neu-btn-primary px-4 py-1.5 rounded-xl text-xs flex items-center gap-1.5">
+            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>ເພີ່ມ
+          </button>
+        </div>
+      </div>
+      <div x-show="selIds.length>0" x-transition class="neu-card p-3 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-2" style="border-left:3px solid var(--rose)">
+        <span class="text-sm font-semibold flex items-center gap-2" style="color:var(--rose)"><i data-lucide="info" class="w-4 h-4"></i>ເລືອກ <b x-text="selIds.length"></b> ລາຍການ</span>
+        <div class="flex gap-2">
+          <button @click="selIds=[]" class="neu-btn px-3 py-1.5 rounded-xl text-xs font-semibold">ຍົກເລີກ</button>
+          <button @click="confirmBulkDel()" class="neu-btn px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1" style="color:var(--rose)"><i data-lucide="trash-2" class="w-3 h-3"></i>ລຶບ</button>
+        </div>
+      </div>
+      <div class="neu-card rounded-2xl overflow-hidden">
+        <div class="p-4 flex justify-between items-center" style="border-bottom:1px solid var(--border)">
+          <h3 class="font-bold flex items-center gap-2 text-sm" style="color:var(--text)"><i data-lucide="list-todo" class="w-4 h-4" style="color:var(--primary)"></i>ລາຍການ (<span x-text="filteredItems().length"></span>)</h3>
+          <span class="text-[10px]" style="color:var(--muted)">✏️ ກົດດິນສໍ ແກ້ໄຂ</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left">
+            <thead class="text-[10px] uppercase tracking-wider" style="background:var(--bg);color:var(--muted)">
+              <tr>
+                <th class="px-4 py-3 w-10 text-center"><input type="checkbox" :checked="isAllSel()" @change="toggleAllSel()" class="w-3.5 h-3.5 rounded cursor-pointer"></th>
+                <th class="px-3 py-3 w-10">Done</th>
+                <th class="px-3 py-3">ໝວດ</th><th class="px-3 py-3">ບັນຫາ</th>
+                <th class="px-3 py-3 hidden lg:table-cell">ຜົນກະທົບ</th>
+                <th class="px-3 py-3">ແນວທາງ</th><th class="px-3 py-3">ລະດັບ</th>
+                <th class="px-3 py-3 text-right">ຈັດການ</th>
+              </tr>
+            </thead>
+            <tbody style="border-color:var(--border)" class="divide-y">
+              <template x-for="item in filteredItems()" :key="item.id">
+                <tr class="neu-row transition-all" :class="item.completed?'row-done':''">
+                  <td class="px-4 py-3 text-center"><input type="checkbox" :value="item.id" x-model="selIds" class="w-3.5 h-3.5 rounded cursor-pointer"></td>
+                  <td class="px-3 py-3"><input type="checkbox" x-model="item.completed" @change="save();showToast(item.completed?'ໝາຍສຳເລັດ!':'ຍັງຄ້າງ','info')" class="w-3.5 h-3.5 rounded cursor-pointer"></td>
+                  <td class="px-3 py-3"><span :class="catColor(item.category)" class="neu-badge px-2 py-0.5 text-[9px] font-semibold inline-block rounded-lg" x-text="item.category"></span></td>
+                  <td class="px-3 py-3 text-xs font-medium max-w-[140px]" style="color:var(--text)"><div class="truncate" :title="item.issue" x-text="item.issue"></div></td>
+                  <td class="px-3 py-3 text-xs max-w-[130px] hidden lg:table-cell" style="color:var(--muted)"><div class="truncate" :title="item.impact" x-text="item.impact"></div></td>
+                  <td class="px-3 py-3 text-xs max-w-[190px]" style="color:var(--text)"><div class="truncate" :title="item.action" x-text="item.action"></div></td>
+                  <td class="px-3 py-3 whitespace-nowrap">
+                    <span :class="item.priority==='High'?'text-red-500':'text-amber-500'" class="neu-badge block px-2 py-0.5 rounded text-center text-[9px] font-bold mb-1" x-text="item.priority"></span>
+                    <span class="neu-badge block px-2 py-0.5 rounded text-center text-[9px]" style="color:var(--blue)" x-text="item.phase.replace('Phase ','P')"></span>
+                  </td>
+                  <td class="px-3 py-3 text-right whitespace-nowrap">
+                    <button @click="openEdit(item)" class="neu-btn p-1.5 rounded-lg mr-1" style="color:var(--muted)"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+                    <button @click="confirmSingleDel(item.id)" class="neu-btn p-1.5 rounded-lg" style="color:var(--muted)"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                  </td>
+                </tr>
+              </template>
+              <template x-if="filteredItems().length===0">
+                <tr><td colspan="8" class="px-6 py-14 text-center" style="color:var(--muted)"><i data-lucide="folder-open" class="w-10 h-10 mx-auto mb-2 opacity-30"></i><p class="text-sm">ບໍ່ພົບຂໍ້ມູນ</p></td></tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB: ROADMAP ─── -->
+    <div x-show="activeTab==='roadmap'" class="tab-content space-y-5">
+      <div class="text-center"><h2 class="text-xl font-bold mb-1" style="color:var(--text)">Roadmap 3 ໄລຍະ</h2><p class="text-xs" style="color:var(--muted)">ກົດ Card ແກ້ໄຂ • ຕິ໊ກ ☑ ສຳເລັດ</p></div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <template x-for="ph in phases" :key="ph.id">
+          <div class="neu-card rounded-2xl flex flex-col" style="min-height:520px">
+            <div class="p-4 rounded-t-2xl" :style="`border-bottom:1px solid var(--border);background:${ph.bgColor}`">
+              <div class="flex justify-between items-center">
+                <div><span class="text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest neu-badge" :style="`color:${ph.color}`" x-text="ph.id"></span>
+                <h3 class="font-bold mt-1 text-sm" style="color:var(--text)" x-text="ph.label"></h3></div>
+                <span class="neu-inset px-2 py-1 rounded-lg text-[10px] font-semibold" style="color:var(--muted)" x-text="itemsByPhase(ph.id).length+' ວຽກ'"></span>
+              </div>
+              <div class="mt-2.5 neu-progress-track"><div class="neu-progress-fill" :style="`width:${phaseCompletion(ph.id)}%;background:${ph.color}`"></div></div>
+              <div class="text-[9px] mt-1 text-right" style="color:var(--muted)" x-text="phaseCompletion(ph.id)+'% ສຳເລັດ'"></div>
+            </div>
+            <div class="p-3 flex-grow overflow-y-auto space-y-2">
+              <template x-for="item in itemsByPhase(ph.id)" :key="item.id">
+                <div class="kanban-card neu-flat p-3 rounded-xl" :class="item.priority==='High'&&!item.completed?'high-glow':''" @click="openEdit(item)">
+                  <div class="flex justify-between items-start gap-2 mb-1.5">
+                    <span :class="catColor(item.category)" class="neu-badge text-[8px] px-1.5 py-0.5 rounded-lg font-semibold flex-shrink-0" x-text="item.category"></span>
+                    <span :class="item.priority==='High'?'text-red-500':'text-amber-500'" class="text-[8px] px-1.5 py-0.5 rounded font-bold flex-shrink-0 neu-badge" x-text="item.priority"></span>
+                  </div>
+                  <h4 class="text-[11px] font-semibold line-clamp-2 mb-1" style="color:var(--text)" x-text="item.action"></h4>
+                  <p class="text-[9px] line-clamp-1" style="color:var(--muted)">🔍 <span x-text="item.issue"></span></p>
+                  <div class="flex justify-between items-center mt-2 pt-1.5" style="border-top:1px solid var(--border)">
+                    <label class="flex items-center gap-1 text-[9px] cursor-pointer" style="color:var(--muted)" @click.stop><input type="checkbox" x-model="item.completed" @change="save()" class="w-3 h-3 rounded">ສຳເລັດ</label>
+                    <button @click.stop="confirmSingleDel(item.id)" class="neu-btn p-1 rounded-lg" style="color:var(--muted)"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ─── TAB: FISHBONE ─── -->
+    <div x-show="activeTab==='fishbone'" class="tab-content space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div><h2 class="text-xl font-bold mb-0.5" style="color:var(--text)">Fishbone / Ishikawa Diagram</h2>
+          <p class="text-xs" style="color:var(--muted)">ເລືອກ Framework • ກົດ Pillar ເພື່ອລາຍລະອຽດ • ລາກ Sticky Note ໃສ່ Drop Zone ໄດ້</p></div>
+        <div class="neu-card p-2 rounded-2xl flex gap-1.5 items-center">
+          <span class="text-[10px] font-semibold px-1" style="color:var(--muted)">Framework:</span>
+          <template x-for="mf in mFrameworks" :key="mf.id">
+            <button @click="setMF(mf.id)" :class="activeMF===mf.id?'m-tab-active':'m-tab-inactive'" class="m-tab" x-text="mf.label"></button>
+          </template>
+        </div>
+      </div>
+      <!-- M-Info -->
+      <div class="neu-card p-4 rounded-2xl flex items-center gap-3">
+        <div class="neu-btn p-2 rounded-xl" style="color:var(--primary)"><i data-lucide="info" class="w-4 h-4"></i></div>
+        <div>
+          <h4 class="font-bold text-sm" style="color:var(--text)" x-text="mFInfo()?.name"></h4>
+          <p class="text-[10px]" style="color:var(--muted)" x-text="mFInfo()?.desc"></p>
+        </div>
+        <div class="flex flex-wrap gap-1.5 ml-auto">
+          <template x-for="p in activePillars" :key="p.name"><span class="neu-badge px-2.5 py-1 rounded-xl text-[10px] font-semibold" style="color:var(--primary)" x-text="p.name"></span></template>
+        </div>
+      </div>
+      <!-- Desktop Fishbone -->
+      <div class="hidden lg:block" id="fishbone-canvas">
+        <div class="relative neu-card rounded-2xl overflow-hidden" style="min-height:560px;padding:2rem">
+          <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1100 520" preserveAspectRatio="xMidYMid meet">
+            <line class="spine-anim" x1="55" y1="260" x2="1000" y2="260" stroke="#F47A20" stroke-width="3.5" stroke-dasharray="6,3"/>
+            <polygon points="1000,252 1022,260 1000,268" fill="#F47A20"/>
+            <line x1="210" y1="110" x2="360" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+            <line x1="510" y1="110" x2="660" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+            <line x1="810" y1="110" x2="960" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+            <line x1="210" y1="410" x2="360" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+            <line x1="510" y1="410" x2="660" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+            <line x1="810" y1="410" x2="960" y2="260" :stroke="'var(--border)'" stroke-width="1.5"/>
+          </svg>
+          <div class="relative w-full" style="height:480px">
+            <!-- Effect -->
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 w-[160px] text-center rounded-xl p-3.5 z-20 neu-flat" style="border-left:3px solid var(--rose)">
+              <span class="text-[8px] uppercase font-bold tracking-widest block mb-1" style="color:var(--rose)">EFFECT</span>
+              <span class="text-xs font-bold leading-tight" style="color:var(--text)">ຜູ້ໃຊ້ App ໜ້ອຍ</span>
+            </div>
+            <!-- Pillar blocks with drop zones -->
+            <template x-for="(pillar,i) in activePillars" :key="pillar.name">
+              <div class="pillar-card-hover absolute neu-card p-3 cursor-pointer z-10"
+                   :style="pillarStyle(i)+'width:210px'"
+                   @click="selectPillar(pillar.name)"
+                   @dragover.prevent="dragOverPillar=pillar.name"
+                   @dragleave="dragOverPillar=null"
+                   @drop.prevent="dropOnPillar(pillar.name,$event)"
+                   :class="dragOverPillar===pillar.name?'drop-zone drag-over':'drop-zone'">
+                <div class="flex items-center gap-2 font-bold mb-1.5 text-xs" :style="`color:${pillar.color}`">
+                  <i :data-lucide="pillar.icon" class="w-3.5 h-3.5"></i>
+                  <span x-text="pillar.name"></span>
+                </div>
+                <template x-for="item in itemsByCat(pillar.name).slice(0,2)" :key="item.id">
+                  <p class="text-[9px] truncate" style="color:var(--muted)">• <span x-text="item.issue"></span></p>
+                </template>
+                <p class="text-[8px] mt-1" :style="`color:${pillar.color}99`" x-show="itemsByCat(pillar.name).length>2" x-text="'+ '+(itemsByCat(pillar.name).length-2)+' ອີກ...'" ></p>
+                <!-- Dropped notes preview -->
+                <template x-for="note in notesOnPillar(pillar.name)" :key="note.id">
+                  <div class="mt-1 px-1.5 py-0.5 rounded text-[8px] font-medium truncate" :style="`background:${note.color}33;color:${note.color}`">📌 <span x-text="note.text.substring(0,30)"></span></div>
+                </template>
+                <div x-show="dragOverPillar===pillar.name" class="text-[9px] text-center mt-2 font-bold" style="color:var(--primary)">📌 ວາງທີ່ນີ້</div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <!-- Mobile Pillars -->
+      <div class="grid lg:hidden grid-cols-1 md:grid-cols-2 gap-3">
+        <template x-for="pillar in activePillars" :key="pillar.name">
+          <div class="pillar-card-hover neu-card p-4 rounded-2xl cursor-pointer relative overflow-hidden" @click="selectPillar(pillar.name)"
+               @dragover.prevent="dragOverPillar=pillar.name" @dragleave="dragOverPillar=null"
+               @drop.prevent="dropOnPillar(pillar.name,$event)" :class="dragOverPillar===pillar.name?'drop-zone drag-over':'drop-zone'">
+            <div class="absolute top-0 left-0 right-0 h-1 rounded-t-2xl" :style="`background:${pillar.color}`"></div>
+            <div class="flex justify-between items-center mb-2 mt-1">
+              <span class="font-bold text-sm" style="color:var(--text)" x-text="pillar.name"></span>
+              <span class="neu-badge text-[10px] px-2 py-0.5 rounded-lg" style="color:var(--muted)" x-text="itemsByCat(pillar.name).length+' ບັນຫາ'"></span>
+            </div>
+            <ul class="space-y-0.5"><template x-for="item in itemsByCat(pillar.name).slice(0,3)" :key="item.id"><li class="text-[10px] truncate" style="color:var(--muted)">• <span x-text="item.issue"></span></li></template></ul>
+            <template x-for="note in notesOnPillar(pillar.name)" :key="note.id">
+              <div class="mt-1 px-1.5 py-0.5 rounded text-[8px] font-medium truncate" :style="`background:${note.color}33;color:${note.color}`">📌 <span x-text="note.text.substring(0,30)"></span></div>
+            </template>
+          </div>
+        </template>
+      </div>
+      <!-- Detail Drawer -->
+      <div x-show="selectedPillar" x-transition class="neu-card rounded-2xl p-5" style="border-left:3px solid var(--primary)">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="layers" class="w-4 h-4" style="color:var(--primary)"></i>ລາຍລະອຽດ: <span style="color:var(--primary)" class="ml-1" x-text="selectedPillar"></span></h3>
+          <button @click="selectedPillar=null" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <template x-for="item in itemsByCat(selectedPillar)" :key="item.id">
+            <div class="neu-flat p-4 rounded-xl">
+              <div class="flex justify-between items-center mb-2">
+                <span :class="item.priority==='High'?'text-red-500':'text-amber-500'" class="neu-badge text-[9px] px-2 py-0.5 rounded font-bold" x-text="item.priority"></span>
+                <span class="text-[9px] font-semibold" style="color:var(--primary)" x-text="item.phase"></span>
+              </div>
+              <p class="text-xs font-semibold mb-1" style="color:var(--text)"><span style="color:var(--rose)">ບັນຫາ:</span> <span x-text="item.issue"></span></p>
+              <p class="text-[10px] mb-2" style="color:var(--muted)"><span style="color:var(--text)">ຜົນ:</span> <span x-text="item.impact"></span></p>
+              <div class="neu-inset p-2.5 rounded-xl"><p class="text-[9px] font-bold mb-1" style="color:var(--primary)">💡 ແນວທາງ:</p><p class="text-[10px]" style="color:var(--text)" x-text="item.action"></p></div>
+              <div class="flex justify-between items-center mt-3 pt-2" style="border-top:1px solid var(--border)">
+                <label class="flex items-center gap-1 text-[10px] cursor-pointer" style="color:var(--muted)"><input type="checkbox" x-model="item.completed" @change="save()" class="w-3.5 h-3.5 rounded">ສຳເລັດ</label>
+                <button @click="openEdit(item)" class="neu-btn p-1.5 rounded-lg"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+              </div>
+            </div>
+          </template>
+          <div x-show="itemsByCat(selectedPillar).length===0" class="col-span-2 py-8 text-center text-sm" style="color:var(--muted)">ຍັງບໍ່ມີຂໍ້ມູນ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TAB: WORKSHOP BOARD ─── -->
+    <div x-show="activeTab==='workshop'" class="tab-content space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div><h2 class="text-xl font-bold mb-0.5" style="color:var(--text)">🗂️ Workshop Board</h2>
+          <p class="text-xs" style="color:var(--muted)">ສ້າງ Sticky Note • ລາກໄປມາໄດ້ • ລາກໃສ່ Fishbone Pillar ໄດ້</p></div>
+        <div class="flex gap-2 flex-wrap">
+          <button @click="addStickyNote()" class="neu-btn-primary px-4 py-2 rounded-xl text-xs flex items-center gap-1.5">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i> ເພີ່ມ Note
+          </button>
+          <div class="sticky-colors flex gap-1.5 items-center neu-inset px-3 py-2 rounded-xl">
+            <span class="text-[10px] font-semibold mr-1" style="color:var(--muted)">ສີ:</span>
+            <template x-for="c in noteColors" :key="c">
+              <button @click="selectedNoteColor=c" :style="`background:${c};${selectedNoteColor===c?'box-shadow:0 0 0 3px white,0 0 0 5px '+c:''}; border-radius:50%; width:18px; height:18px; border:none; cursor:pointer;`" class="transition-transform hover:scale-125"></button>
+            </template>
+          </div>
+          <button @click="clearAllNotes()" class="neu-btn px-3 py-2 rounded-xl text-xs flex items-center gap-1.5" style="color:var(--rose)" x-show="stickyNotes.length>0">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> ລ້າງ
+          </button>
+        </div>
+      </div>
+
+      <!-- Fishbone Drop Targets strip -->
+      <div class="neu-card p-3 rounded-2xl" x-show="activePillars.length>0">
+        <p class="text-[10px] font-semibold mb-2" style="color:var(--muted)">🎯 ລາກ Note ໃສ່ Pillar ດ້ານລຸ່ມ:</p>
+        <div class="flex flex-wrap gap-2">
+          <template x-for="pillar in activePillars" :key="pillar.name">
+            <div class="drop-zone neu-inset px-3 py-2 rounded-xl text-[11px] font-bold flex items-center gap-1.5 min-w-[100px] justify-center"
+                 :style="`color:${pillar.color}`"
+                 @dragover.prevent="dragOverPillar=pillar.name"
+                 @dragleave="dragOverPillar=null"
+                 @drop.prevent="dropOnPillar(pillar.name,$event)"
+                 :class="dragOverPillar===pillar.name?'drag-over':''">
+              <i :data-lucide="pillar.icon" class="w-3.5 h-3.5"></i>
+              <span x-text="pillar.name"></span>
+              <span class="text-[9px] font-normal ml-1" style="color:var(--muted)" x-text="'('+notesOnPillar(pillar.name).length+')'" ></span>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Board -->
+      <div id="workshop-board" class="rounded-2xl" style="height:600px;cursor:default"
+           @dragover.prevent @drop.prevent="dropOnBoard($event)">
+        <!-- Background grid pattern -->
+        <svg class="absolute inset-0 w-full h-full" style="border-radius:18px;opacity:.06" xmlns="http://www.w3.org/2000/svg">
+          <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="#F47A20" stroke-width="0.8"/></pattern></defs>
+          <rect width="100%" height="100%" fill="url(#grid)"/>
+        </svg>
+
+        <template x-for="note in stickyNotes" :key="note.id">
+          <div class="sticky-note"
+               :id="'note-'+note.id"
+               :style="`left:${note.x}px;top:${note.y}px;background:${note.color};z-index:${note.zIndex||10}`"
+               draggable="true"
+               @dragstart="startDrag(note,$event)"
+               @dragend="endDrag(note)"
+               @mousedown="bringToFront(note)">
+            <div class="flex justify-between items-center">
+              <span class="note-tag" x-text="note.pillar||'Unassigned'"></span>
+              <button class="note-del" @click.stop="deleteNote(note.id)">✕</button>
+            </div>
+            <textarea
+              x-model="note.text"
+              @input="saveNotes()"
+              @mousedown.stop
+              placeholder="ພິມໃສ່ທີ່ນີ້..."
+              rows="4"
+              style="width:100%"></textarea>
+            <div class="flex justify-between items-center mt-1">
+              <span class="text-[8px] opacity-50" style="color:#2d3454" x-text="new Date(note.created).toLocaleDateString('lo')"></span>
+              <div class="flex gap-1">
+                <template x-for="c in noteColors.slice(0,4)" :key="c">
+                  <button @click.stop="changeNoteColor(note,c)" :style="`background:${c};width:10px;height:10px;border-radius:50%;border:none;cursor:pointer`"></button>
+                </template>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- Empty state -->
+        <div x-show="stickyNotes.length===0" class="absolute inset-0 flex flex-col items-center justify-center" style="color:var(--muted)">
+          <i data-lucide="sticky-note" class="w-16 h-16 mb-4 opacity-20"></i>
+          <p class="text-sm font-semibold">ກົດ "+ ເພີ່ມ Note" ເພື່ອເລີ່ມ</p>
+          <p class="text-xs mt-1 opacity-70">ສ້າງ Sticky Note ແລ້ວລາກໃສ່ Pillar ໃດໆ</p>
+        </div>
+      </div>
+
+      <!-- Pillar Notes Summary -->
+      <div class="grid grid-cols-2 lg:grid-cols-3 gap-3" x-show="stickyNotes.some(n=>n.pillar)">
+        <template x-for="pillar in activePillars.filter(p=>notesOnPillar(p.name).length>0)" :key="pillar.name">
+          <div class="neu-card p-3 rounded-2xl" :style="`border-left:3px solid ${pillar.color}`">
+            <div class="font-bold text-xs mb-2 flex items-center gap-1.5" :style="`color:${pillar.color}`">
+              <i :data-lucide="pillar.icon" class="w-3.5 h-3.5"></i><span x-text="pillar.name"></span>
+              <span class="neu-badge px-1.5 py-0.5 rounded text-[9px] ml-auto" style="color:var(--muted)" x-text="notesOnPillar(pillar.name).length+' notes'"></span>
+            </div>
+            <template x-for="note in notesOnPillar(pillar.name)" :key="note.id">
+              <div class="text-[9px] px-2 py-1 rounded-lg mb-1 truncate" :style="`background:${note.color}40;color:#2d3454`" x-text="note.text||'(ຫວ່າງ)'"></div>
+            </template>
+          </div>
+        </template>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="neu-card py-3 mt-4" style="border-radius:22px 22px 0 0">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between text-xs" style="color:var(--muted)">
+      <span>© 2026 Bitqik MY GOALS Dashboard</span>
+      <button @click="exportToPptx()" class="flex items-center gap-1.5 transition-colors" style="color:var(--muted)" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--muted)'">
+        <i data-lucide="file-down" class="w-3.5 h-3.5"></i>Export PPTX
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div x-show="openAddModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak x-transition>
+  <div class="modal-enter neu-card rounded-2xl w-full max-w-lg shadow-2xl">
+    <div class="p-4 flex justify-between items-center" style="border-bottom:1px solid var(--border)">
+      <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i :data-lucide="editId?'pencil':'plus-circle'" class="w-4 h-4" style="color:var(--primary)"></i><span x-text="editId?'ແກ້ໄຂ':'ເພີ່ມລາຍການໃໝ່'"></span></h3>
+      <button @click="closeModal()" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <form @submit.prevent="saveForm()" class="p-4 space-y-3">
+      <div class="grid grid-cols-2 gap-3">
+        <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ໝວດໝູ່</label>
+          <select x-model="form.category" required class="neu-input w-full rounded-xl px-3 py-1.5 text-xs cursor-pointer">
+            <template x-for="p in activePillars" :key="p.name"><option :value="p.name" x-text="p.name"></option></template>
+          </select></div>
+        <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ຄວາມຮີບດ່ວນ</label>
+          <select x-model="form.priority" class="neu-input w-full rounded-xl px-3 py-1.5 text-xs cursor-pointer"><option value="High">ສູງ (High)</option><option value="Medium">ກາງ (Medium)</option></select></div>
+      </div>
+      <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ໄລຍະ</label>
+        <select x-model="form.phase" class="neu-input w-full rounded-xl px-3 py-1.5 text-xs cursor-pointer"><option value="Phase 1">Phase 1: Quick Wins</option><option value="Phase 2">Phase 2: Core</option><option value="Phase 3">Phase 3: Long-term</option></select></div>
+      <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ບັນຫາ</label>
+        <input type="text" x-model="form.issue" required placeholder="ອະທິບາຍ..." class="neu-input w-full rounded-xl px-3 py-1.5 text-xs"></div>
+      <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ຜົນກະທົບ</label>
+        <input type="text" x-model="form.impact" required placeholder="ຜົນກະທົບ..." class="neu-input w-full rounded-xl px-3 py-1.5 text-xs"></div>
+      <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ແນວທາງ</label>
+        <textarea x-model="form.action" required rows="2" placeholder="ສິ່ງທີ່ຕ້ອງດຳເນີນ..." class="neu-input w-full rounded-xl px-3 py-1.5 text-xs resize-none"></textarea></div>
+      <div class="flex justify-end gap-2 pt-1" style="border-top:1px solid var(--border)">
+        <button type="button" @click="closeModal()" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-semibold">ຍົກເລີກ</button>
+        <button type="submit" class="neu-btn-primary px-5 py-1.5 rounded-xl text-xs font-bold" x-text="editId?'ບັນທຶກ':'ເພີ່ມ'"></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- PROJECT MODAL -->
+<div x-show="openAddProjectModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak x-transition>
+  <div class="modal-enter neu-card rounded-2xl w-full max-w-md shadow-2xl">
+    <div class="p-4 flex justify-between items-center" style="border-bottom:1px solid var(--border)">
+      <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="folder-plus" class="w-4 h-4" style="color:var(--primary)"></i>ສ້າງໂຄງການໃໝ່</h3>
+      <button @click="openAddProjectModal=false" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <form @submit.prevent="createProject()" class="p-4 space-y-3">
+      <div><label class="block text-[10px] font-semibold mb-1" style="color:var(--muted)">ຊື່ໂຄງການ</label>
+        <input type="text" x-model="newProjName" required placeholder="ເຊັ່ນ: Q4 Plan" class="neu-input w-full rounded-xl px-3 py-1.5 text-xs"></div>
+      <div class="flex justify-end gap-2 pt-1" style="border-top:1px solid var(--border)">
+        <button type="button" @click="openAddProjectModal=false" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-semibold">ຍົກເລີກ</button>
+        <button type="submit" class="neu-btn-primary px-5 py-1.5 rounded-xl text-xs font-bold">ສ້າງ</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div x-show="showDelModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak x-transition>
+  <div class="modal-enter neu-card rounded-2xl w-full max-w-sm shadow-2xl">
+    <div class="p-4 flex justify-between items-center" style="border-bottom:1px solid var(--border)">
+      <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="alert-triangle" class="w-4 h-4" style="color:var(--rose)"></i>ຢືນຢັນລຶບ</h3>
+      <button @click="showDelModal=false" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="p-4"><p class="text-sm" style="color:var(--text)">ແນ່ໃຈ? ບໍ່ສາມາດກູ້ຄືນໄດ້.</p></div>
+    <div class="p-4 flex justify-end gap-2" style="border-top:1px solid var(--border)">
+      <button @click="showDelModal=false" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-semibold">ຍົກເລີກ</button>
+      <button @click="execDel()" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-bold" style="color:var(--rose)">ລຶບ</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE PROJECT MODAL -->
+<div x-show="showDelProjModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak x-transition>
+  <div class="modal-enter neu-card rounded-2xl w-full max-w-sm shadow-2xl">
+    <div class="p-4 flex justify-between items-center" style="border-bottom:1px solid var(--border)">
+      <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="alert-triangle" class="w-4 h-4" style="color:var(--rose)"></i>ລຶບໂຄງການ</h3>
+      <button @click="showDelProjModal=false" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="p-4 space-y-1"><p class="text-sm" style="color:var(--text)">ລຶບ <strong style="color:var(--rose)" x-text="projects.find(p=>p.id===currentProjectId)?.name"></strong>?</p><p class="text-xs" style="color:var(--muted)">ຂໍ້ມູນທັງໝົດຈະຖືກລຶບຖາວອນ</p></div>
+    <div class="p-4 flex justify-end gap-2" style="border-top:1px solid var(--border)">
+      <button @click="showDelProjModal=false" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-semibold">ຍົກເລີກ</button>
+      <button @click="execDelProj()" class="neu-btn px-4 py-1.5 rounded-xl text-xs font-bold" style="color:var(--rose)">ລຶບ</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDELINE MODAL -->
+<div x-show="showGuide" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak x-transition>
+  <div class="modal-enter neu-card rounded-2xl w-full max-w-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+    <div class="p-4 flex justify-between items-center sticky top-0 neu-card rounded-t-2xl z-10" style="border-bottom:1px solid var(--border)">
+      <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="book-open" class="w-4 h-4" style="color:var(--primary)"></i>📘 Guideline: ວິທີໃຊ້ Dashboard</h3>
+      <button @click="showGuide=false" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-4 h-4"></i></button>
+    </div>
+    <div class="p-5 space-y-4">
+      <div><h4 class="text-xs font-bold mb-2 uppercase tracking-wide" style="color:var(--primary)">🐟 M-Framework — Fishbone</h4>
+        <div class="space-y-2">
+          <div class="guide-step neu-inset p-3 rounded-xl"><div class="text-xs font-bold mb-0.5" style="color:var(--text)">4Ms (ອຸດສາຫະກຳ)</div><p class="text-[10px]" style="color:var(--muted)">Man • Machine • Method • Material — ໃຊ້ ISO/QC/ສາຍຜະລິດ</p></div>
+          <div class="guide-step neu-inset p-3 rounded-xl"><div class="text-xs font-bold mb-0.5" style="color:var(--text)">5Ms (Six Sigma / Lean)</div><p class="text-[10px]" style="color:var(--muted)">+ Measurement — ໃຊ້ KPI, Lean, Six Sigma</p></div>
+          <div class="guide-step neu-inset p-3 rounded-xl"><div class="text-xs font-bold mb-0.5" style="color:var(--text)">6Ms (Full Analysis)</div><p class="text-[10px]" style="color:var(--muted)">+ Mother Nature — ໃຊ້ Digital Product, Service, Environment</p></div>
+          <div class="guide-step neu-inset p-3 rounded-xl"><div class="text-xs font-bold mb-0.5" style="color:var(--text)">Custom (Bitqik)</div><p class="text-[10px]" style="color:var(--muted)">Product/Process/Marketing/Pricing/People/Competition — Digital Business</p></div>
+        </div>
+      </div>
+      <div><h4 class="text-xs font-bold mb-2 uppercase tracking-wide" style="color:var(--primary)">🗂️ Workshop Board</h4>
+        <div class="space-y-1.5">
+          <div class="neu-inset p-3 rounded-xl"><p class="text-[10px]" style="color:var(--muted)"><span style="color:var(--text)" class="font-semibold">ສ້າງ Note:</span> ກົດ "+ ເພີ່ມ Note" — ພິມຂໍ້ຄວາມລົງໃນ Note</p></div>
+          <div class="neu-inset p-3 rounded-xl"><p class="text-[10px]" style="color:var(--muted)"><span style="color:var(--text)" class="font-semibold">Drag & Drop:</span> ຈັບ Note ລາກໄປວາງຕຳແໜ່ງໃດກໍໄດ້ໃນ Board</p></div>
+          <div class="neu-inset p-3 rounded-xl"><p class="text-[10px]" style="color:var(--muted)"><span style="color:var(--text)" class="font-semibold">ລາກໃສ່ Pillar:</span> ລາກ Note ໄປວາງ Drop Zone Pillar (ແຖວດ້ານເທິງ Board) — Note ຈະຖືກ tag</p></div>
+          <div class="neu-inset p-3 rounded-xl"><p class="text-[10px]" style="color:var(--muted)"><span style="color:var(--text)" class="font-semibold">ປ່ຽນສີ:</span> ກົດວົງສີເລັກໃຕ້ Note ເພື່ອປ່ຽນສີ</p></div>
+        </div>
+      </div>
+      <div><h4 class="text-xs font-bold mb-2 uppercase tracking-wide" style="color:var(--primary)">🌙 Light/Dark Mode</h4>
+        <div class="neu-inset p-3 rounded-xl"><p class="text-[10px]" style="color:var(--muted)">ກົດ Toggle Button ສີສົ້ມ (Header ຂວາ) ເພື່ອສັບປ່ຽນ Theme</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const LOGO_B64 = "";
+
+function app(){return{
+  activeTab:"overview",
+  openAddModal:false,openAddProjectModal:false,showDelModal:false,showDelProjModal:false,showGuide:false,
+  selectedPillar:null,editId:null,toasts:[],
+  currentProjectId:1,newProjName:"",lightMode:false,
+  projects:[{id:1,name:"Bitqik App Core Revamp"}],
+  fCat:"All",fPri:"All",fPhase:"All",fSearch:"",
+  form:{category:"Product",issue:"",impact:"",action:"",priority:"High",phase:"Phase 1"},
+  items:[],selIds:[],delType:"single",delTargetId:null,
+  activeMF:"custom",
+  selectedNoteColor:"#fef08a",
+  stickyNotes:[],
+  dragOverPillar:null,
+  dragNoteId:null,
+  dragOffset:{x:0,y:0},
+
+  noteColors:["#fef08a","#86efac","#93c5fd","#f9a8d4","#fdba74","#c4b5fd","#6ee7b7","#fca5a5"],
+
+  mainTabs:[
+    {id:"overview",label:"ແຜນຍຸດທະສາດ",icon:"layout-dashboard"},
+    {id:"roadmap",label:"Roadmap 3 ໄລຍະ",icon:"milestone"},
+    {id:"fishbone",label:"Fishbone Diagram",icon:"git-merge"},
+    {id:"workshop",label:"Workshop Board",icon:"sticky-note"}
+  ],
+
+  phases:[
+    {id:"Phase 1",label:"⚡ Quick Wins (1-3 ເດືອນ)",color:"#0ECB81",bgColor:"rgba(14,203,129,.04)"},
+    {id:"Phase 2",label:"🔧 Core (3-6 ເດືອນ)",color:"#4f8ef7",bgColor:"rgba(79,142,247,.04)"},
+    {id:"Phase 3",label:"🚀 Long-term (6m+)",color:"#a855f7",bgColor:"rgba(168,85,247,.04)"}
+  ],
+
+  mFrameworks:[
+    {id:"4m",label:"4Ms",pillars:["Man","Machine","Method","Material"],name:"4Ms Framework",desc:"ໃຊ້ໃນ ການຜະລິດ, ISO, QC — 4 ໝວດຫຼັກ"},
+    {id:"5m",label:"5Ms",pillars:["Man","Machine","Method","Material","Measurement"],name:"5Ms Framework",desc:"ໃຊ້ Six Sigma, Lean — ເພີ່ມ Measurement"},
+    {id:"6m",label:"6Ms",pillars:["Man","Machine","Method","Material","Measurement","Mother Nature"],name:"6Ms Framework",desc:"Full Analysis — ຄິດເຖິງ Environment"},
+    {id:"custom",label:"Custom",pillars:["Product","Process","Marketing","Pricing","People","Competition"],name:"Custom (Bitqik)",desc:"Digital Business / Startup Framework"}
+  ],
+
+  pillarColors:{Man:"#F47A20",Machine:"#22d3ee",Method:"#ec4899",Material:"#0ECB81",Measurement:"#a855f7","Mother Nature":"#4f8ef7",Product:"#F47A20",Process:"#22d3ee",Marketing:"#ec4899",Pricing:"#0ECB81",People:"#a855f7",Competition:"#4f8ef7"},
+  pillarIcons:{Man:"users",Machine:"cpu",Method:"settings",Material:"package",Measurement:"bar-chart-2","Mother Nature":"globe",Product:"smartphone",Process:"activity",Marketing:"megaphone",Pricing:"dollar-sign",People:"users",Competition:"swords"},
+
+  get activePillars(){
+    const mf=this.mFrameworks.find(m=>m.id===this.activeMF);
+    return(mf?.pillars||[]).map(n=>({name:n,color:this.pillarColors[n]||"#aaa",icon:this.pillarIcons[n]||"circle"}));
+  },
+
+  mFInfo(){return this.mFrameworks.find(m=>m.id===this.activeMF);},
+  setMF(id){this.activeMF=id;this.selectedPillar=null;const mf=this.mFrameworks.find(m=>m.id===id);if(mf)this.form.category=mf.pillars[0];this.renderIcons();},
+
+  pillarStyle(i){
+    const total=this.activePillars.length;
+    const topN=Math.ceil(total/2);
+    const isTop=i<topN;
+    const idx=isTop?i:i-topN;
+    const spacing=Math.min(310,880/topN);
+    const x=45+idx*spacing;
+    const y=isTop?5:310;
+    return `left:${x}px;top:${y}px;`;
+  },
+
+  /* ── THEME ── */
+  toggleTheme(){
+    this.lightMode=!this.lightMode;
+    document.getElementById("html-root").classList.toggle("light",this.lightMode);
+    localStorage.setItem("bq_theme",this.lightMode?"light":"dark");
+    this.renderIcons();
+  },
+
+  /* ── STICKY NOTES ── */
+  addStickyNote(){
+    const board=document.getElementById("workshop-board");
+    const rect=board?board.getBoundingClientRect():{width:800,height:600};
+    const x=Math.random()*(Math.max(200,rect.width-200));
+    const y=Math.random()*(Math.max(100,rect.height-180));
+    const note={id:Date.now(),text:"",color:this.selectedNoteColor,x:Math.round(x),y:Math.round(y),pillar:null,created:Date.now(),zIndex:10};
+    this.stickyNotes.push(note);
+    this.saveNotes();
+    this.renderIcons();
+    this.showToast("ເພີ່ມ Note ສຳເລັດ!","success");
+  },
+  deleteNote(id){this.stickyNotes=this.stickyNotes.filter(n=>n.id!==id);this.saveNotes();},
+  clearAllNotes(){this.stickyNotes=[];this.saveNotes();this.showToast("ລ້າງ Board ແລ້ວ","error");},
+  changeNoteColor(note,c){note.color=c;this.saveNotes();},
+  saveNotes(){localStorage.setItem("bq_notes",JSON.stringify(this.stickyNotes));},
+  notesOnPillar(pillarName){return this.stickyNotes.filter(n=>n.pillar===pillarName);},
+  bringToFront(note){note.zIndex=++this._maxZ||100;},
+
+  /* ── DRAG & DROP (sticky notes on board) ── */
+  startDrag(note,event){
+    this.dragNoteId=note.id;
+    const el=document.getElementById("note-"+note.id);
+    if(el){
+      const rect=el.getBoundingClientRect();
+      this.dragOffset={x:event.clientX-rect.left,y:event.clientY-rect.top};
+    }
+    event.dataTransfer.setData("noteId",String(note.id));
+    event.dataTransfer.effectAllowed="move";
+    setTimeout(()=>{if(el)el.classList.add("dragging");},0);
+  },
+  endDrag(note){
+    const el=document.getElementById("note-"+note.id);
+    if(el)el.classList.remove("dragging");
+    this.dragNoteId=null;
+    this.dragOverPillar=null;
+    this.saveNotes();
+  },
+  dropOnBoard(event){
+    const noteId=parseInt(event.dataTransfer.getData("noteId"));
+    const note=this.stickyNotes.find(n=>n.id===noteId);
+    if(!note)return;
+    const board=document.getElementById("workshop-board");
+    if(!board)return;
+    const rect=board.getBoundingClientRect();
+    note.x=Math.max(0,Math.min(event.clientX-rect.left-this.dragOffset.x,rect.width-170));
+    note.y=Math.max(0,Math.min(event.clientY-rect.top-this.dragOffset.y,rect.height-150));
+    note.pillar=null;
+    this.saveNotes();
+  },
+  dropOnPillar(pillarName,event){
+    const noteId=parseInt(event.dataTransfer.getData("noteId"));
+    const note=this.stickyNotes.find(n=>n.id===noteId);
+    if(!note)return;
+    note.pillar=pillarName;
+    this.dragOverPillar=null;
+    this.saveNotes();
+    this.showToast("📌 Note ໄດ້ຮັບ tag: "+pillarName,"success");
+    this.renderIcons();
+  },
+
+  /* ── CORE ── */
+  init(){
+    const theme=localStorage.getItem("bq_theme");
+    if(theme==="light"){this.lightMode=true;document.getElementById("html-root").classList.add("light");}
+    const sp=localStorage.getItem("bq_projects");if(sp)this.projects=JSON.parse(sp);
+    const sc=localStorage.getItem("bq_proj_id");if(sc)this.currentProjectId=parseInt(sc);
+    const si=localStorage.getItem("bq_items");
+    if(si){this.items=JSON.parse(si);this.items.forEach(i=>{if(!i.projectId)i.projectId=1;});}
+    else{const d=this.defaultItems();d.forEach(i=>i.projectId=1);this.items=d;this.save();}
+    const sn=localStorage.getItem("bq_notes");if(sn)this.stickyNotes=JSON.parse(sn);
+    // Fix logo: try src first, embed base64 as fallback
+    setTimeout(()=>{
+      const img=document.getElementById("logo-img");
+      const fb=document.getElementById("logo-fallback");
+      if(img){
+        img.onerror=()=>{img.style.display="none";if(fb)fb.style.display="flex";};
+        img.src="logo.png";
+      }
+    },100);
+    this.renderIcons();
+    ["activeTab","selectedPillar","showDelModal","showDelProjModal","openAddModal","openAddProjectModal","showGuide","activeMF","lightMode"].forEach(w=>this.$watch(w,()=>this.renderIcons()));
+    this._maxZ=100;
+  },
+
+  renderIcons(){setTimeout(()=>{if(typeof lucide!=="undefined")lucide.createIcons();},60);},
+  showToast(msg,type="success"){const id=Date.now();this.toasts.push({id,message:msg,type});setTimeout(()=>{this.toasts=this.toasts.filter(t=>t.id!==id);this.renderIcons();},3000);this.renderIcons();},
+  curItems(){return this.items.filter(i=>i.projectId===this.currentProjectId);},
+  highPriCount(){return this.items.filter(i=>i.projectId===this.currentProjectId&&i.priority==="High"&&!i.completed).length;},
+  completionPct(){const c=this.curItems();if(!c.length)return 0;return Math.round(c.filter(i=>i.completed).length/c.length*100);},
+  filteredItems(){return this.items.filter(i=>{const mp=i.projectId===this.currentProjectId,mc=this.fCat==="All"||i.category===this.fCat,mpr=this.fPri==="All"||i.priority===this.fPri,mph=this.fPhase==="All"||i.phase===this.fPhase,ms=(i.issue||"").toLowerCase().includes(this.fSearch.toLowerCase())||(i.action||"").toLowerCase().includes(this.fSearch.toLowerCase());return mp&&mc&&mpr&&mph&&ms;});},
+  itemsByPhase(ph){return this.items.filter(i=>i.projectId===this.currentProjectId&&i.phase===ph);},
+  itemsByCat(cat){return this.items.filter(i=>i.projectId===this.currentProjectId&&i.category===cat);},
+  phaseCompletion(ph){const p=this.itemsByPhase(ph);if(!p.length)return 0;return Math.round(p.filter(i=>i.completed).length/p.length*100);},
+  selectPillar(n){this.selectedPillar=this.selectedPillar===n?null:n;this.renderIcons();},
+  isAllSel(){const v=this.filteredItems();if(!v.length)return false;return v.map(i=>i.id).every(id=>this.selIds.includes(id));},
+  toggleAllSel(){const v=this.filteredItems().map(i=>i.id);const a=v.every(id=>this.selIds.includes(id));this.selIds=a?this.selIds.filter(id=>!v.includes(id)):[...new Set([...this.selIds,...v])];},
+  save(){localStorage.setItem("bq_items",JSON.stringify(this.items));},
+  changeProject(){localStorage.setItem("bq_proj_id",this.currentProjectId);this.selIds=[];this.selectedPillar=null;this.renderIcons();},
+  createProject(){const id=Date.now();this.projects.push({id,name:this.newProjName.trim()});localStorage.setItem("bq_projects",JSON.stringify(this.projects));this.currentProjectId=id;this.changeProject();this.newProjName="";this.openAddProjectModal=false;this.showToast("ສ້າງໂຄງການ!");},
+  confirmDeleteProject(){if(this.projects.length<=1)return;this.showDelProjModal=true;},
+  execDelProj(){this.items=this.items.filter(i=>i.projectId!==this.currentProjectId);this.save();this.projects=this.projects.filter(p=>p.id!==this.currentProjectId);localStorage.setItem("bq_projects",JSON.stringify(this.projects));this.currentProjectId=this.projects[0].id;this.changeProject();this.showDelProjModal=false;this.showToast("ລຶບໂຄງການ","error");},
+  openEdit(item){this.editId=item.id;this.form={category:item.category,issue:item.issue,impact:item.impact,action:item.action,priority:item.priority,phase:item.phase};this.openAddModal=true;},
+  closeModal(){this.openAddModal=false;this.editId=null;const def=this.activePillars[0]?.name||"Product";this.form={category:def,issue:"",impact:"",action:"",priority:"High",phase:"Phase 1"};},
+  saveForm(){if(this.editId){const idx=this.items.findIndex(i=>i.id===this.editId);if(idx!==-1)Object.assign(this.items[idx],this.form);this.showToast("ແກ້ໄຂສຳເລັດ!");}else{this.items.push({id:Date.now(),projectId:this.currentProjectId,...this.form,completed:false});this.showToast("ເພີ່ມສຳເລັດ!");}this.save();this.closeModal();this.renderIcons();},
+  confirmSingleDel(id){this.delType="single";this.delTargetId=id;this.showDelModal=true;},
+  confirmBulkDel(){if(!this.selIds.length)return;this.delType="bulk";this.showDelModal=true;},
+  execDel(){if(this.delType==="single"&&this.delTargetId!==null){this.items=this.items.filter(i=>i.id!==this.delTargetId);this.selIds=this.selIds.filter(id=>id!==this.delTargetId);}else if(this.delType==="bulk"){this.items=this.items.filter(i=>!this.selIds.includes(i.id));this.selIds=[];}this.save();this.showDelModal=false;this.delTargetId=null;if(this.selectedPillar&&!this.itemsByCat(this.selectedPillar).length)this.selectedPillar=null;this.renderIcons();this.showToast("ລຶບແລ້ວ","error");},
+  catColor(cat){const m={Man:"text-orange-500",Machine:"text-cyan-500",Method:"text-pink-500",Material:"text-emerald-500",Measurement:"text-purple-500","Mother Nature":"text-blue-500",Product:"text-orange-500",Process:"text-cyan-500",Marketing:"text-pink-500",Pricing:"text-emerald-500",People:"text-purple-500",Competition:"text-blue-500"};return m[cat]||"text-gray-400";},
+
+  defaultItems(){return[
+    {id:1,category:"Product",issue:"UI ແຕກຕ່າງຈາກ Platform ຄຸ້ນ",impact:"ຜູ້ໃຊ້ໃໝ່ສັບສົນ",action:"ອອກແບບ UI ໃໝ່ Industry Standards",priority:"High",phase:"Phase 2",completed:false},
+    {id:2,category:"Product",issue:"UX ບໍ່ໄຫຼລື່ນ ຂັ້ນຕອນຫຼາຍ",impact:"Drop-off Rate ສູງ",action:"ຫຼຸດ Steps ຊື້-ຂາຍ One-click",priority:"High",phase:"Phase 2",completed:false},
+    {id:3,category:"Product",issue:"Feature ຫາຍາກ",impact:"ຜູ້ໃຊ້ບໍ່ຮູ້ Feature",action:"ປັບ Navigation ໃຫ້ Feature ຫຼັກເຫັນ",priority:"Medium",phase:"Phase 2",completed:false},
+    {id:4,category:"Process",issue:"KYC Manual ຊ້າ",impact:"ລູກຄ້າລໍດົນ",action:"e-KYC ອັດຕະໂນມັດ + Auto Withdraw",priority:"High",phase:"Phase 2",completed:false},
+    {id:5,category:"Process",issue:"Automation ບໍ່ຄົບ",impact:"ຄວາມໜ້າເຊື່ອຖືຫຼຸດ",action:"Auto-Ticket System",priority:"Medium",phase:"Phase 1",completed:false},
+    {id:6,category:"Marketing",issue:"ຄົນຍັງບໍ່ເຂົ້າໃຈ Crypto",impact:"ກຸ່ມເປົ້າໝາຍກ້ານ",action:"Bitqik Academy + TikTok/Reels",priority:"High",phase:"Phase 2",completed:false},
+    {id:7,category:"Marketing",issue:"Brand Awareness ຕ່ຳ",impact:"ຄົນບໍ່ຮູ້ຈັກ Bitqik",action:"PR Campaign ຄວາມປອດໄພ",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:8,category:"Pricing",issue:"ຄ່າທຳນຽມສູງ",impact:"ຜູ້ໃຊ້ໄປ Platform ອື່ນ",action:"ປັບ Fee ຕ່ຳກວ່າຄູ່ແຂ່ງ",priority:"High",phase:"Phase 1",completed:false},
+    {id:9,category:"Pricing",issue:"ຂາດ Fee Transparency",impact:"ຮູ້ສຶກຖືກເອົາປຽບ",action:"ໜ້າ Fee ລາຍລະອຽດ",priority:"High",phase:"Phase 1",completed:false},
+    {id:10,category:"People",issue:"Support ບໍ່ພຽງພໍ",impact:"ຮູ້ສຶກຖືກທອດທິ້ງ",action:"ທີມ Support + Chatbot 24h",priority:"High",phase:"Phase 1",completed:false},
+    {id:11,category:"People",issue:"Community ໜ້ອຍ",impact:"ຂາດ Word-of-Mouth",action:"Community + Influencer ລາວ",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:12,category:"Competition",issue:"Platform ອື່ນ Feature ຫຼາຍ",impact:"Advanced Users ຫຼຸດ",action:"Staking, Launchpad, Alerts",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:13,category:"Competition",issue:"ຄູ່ແຂ່ງ Promotion ແຮງ",impact:"ດຶງ User ໃໝ່ຍາກ",action:"Zero-Fee ຄັ້ງທຳອິດ + Referral",priority:"High",phase:"Phase 1",completed:false}
+  ];},
+
+  async exportToPptx(){
+    this.showToast("ກຳລັງສ້າງ PPTX...","info");
+    const pptx=new PptxGenJS();pptx.layout="LAYOUT_WIDE";
+    const O="F47A20",D="1a1e2e",C="1f2438",G="7a85a3",W="FFFFFF",GR="0ECB81",R="F6465D",BL="4f8ef7";
+    const ci=this.curItems();const proj=this.projects.find(p=>p.id===this.currentProjectId)?.name||"Bitqik";
+    const done=ci.filter(i=>i.completed).length;const hi=ci.filter(i=>i.priority==="High"&&!i.completed).length;const pct=ci.length?Math.round(done/ci.length*100):0;
+    const s1=pptx.addSlide();s1.background={color:D};
+    s1.addShape(pptx.ShapeType.rect,{x:0,y:0,w:.18,h:5.63,fill:{color:O}});
+    s1.addText("MY GOALS",{x:.45,y:.4,w:8,h:.7,fontSize:40,bold:true,color:O,fontFace:"Calibri",charSpacing:8});
+    s1.addText("Bitqik Strategic Dashboard",{x:.45,y:1.15,w:8,h:.5,fontSize:20,color:W,fontFace:"Calibri"});
+    s1.addText(proj,{x:.45,y:1.7,w:8,h:.3,fontSize:12,color:G,italic:true,fontFace:"Calibri"});
+    [{l:"ທັງໝົດ",v:String(ci.length),c:O},{l:"ສຳເລັດ",v:String(done),c:GR},{l:"ຮີບດ່ວນ",v:String(hi),c:R},{l:"ຄືບໜ້າ",v:pct+"%",c:BL}].forEach((k,i)=>{const bx=.45+i*2.5,by=2.1;s1.addShape(pptx.ShapeType.roundRect,{x:bx,y:by,w:2.3,h:1.1,fill:{color:C},line:{color:k.c+"44",width:1.5},rectRadius:.1});s1.addText(k.v,{x:bx,y:by+.08,w:2.3,h:.6,fontSize:30,bold:true,color:k.c,align:"center",fontFace:"Calibri"});s1.addText(k.l,{x:bx,y:by+.68,w:2.3,h:.3,fontSize:9,color:G,align:"center",fontFace:"Calibri"});});
+    const s2=pptx.addSlide();s2.background={color:D};s2.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.33,h:.55,fill:{color:C}});s2.addText("Action Items",{x:.3,y:.08,w:10,h:.38,fontSize:15,bold:true,color:W,fontFace:"Calibri"});
+    const hdr=[[{text:"ໝວດ",options:{bold:true,color:O}},{text:"ບັນຫາ",options:{bold:true,color:O}},{text:"ຜົນກະທົບ",options:{bold:true,color:O}},{text:"ແນວທາງ",options:{bold:true,color:O}},{text:"ລະດັບ",options:{bold:true,color:O}},{text:"Done",options:{bold:true,color:O}}]];
+    const rows=ci.slice(0,15).map(i=>[{text:i.category,options:{fontSize:8,color:W}},{text:i.issue,options:{fontSize:8,color:W}},{text:i.impact,options:{fontSize:7,color:G}},{text:i.action,options:{fontSize:7,color:G}},{text:i.priority,options:{fontSize:8,bold:true,color:i.priority==="High"?R:"F59E0B"}},{text:i.completed?"Yes":"No",options:{fontSize:8,align:"center"}}]);
+    s2.addTable([...hdr,...rows],{x:.3,y:.65,w:12.73,h:4.65,colW:[1.3,2.2,1.8,3.5,.9,.93],border:{color:"2d3454",pt:.5},fill:{color:C},fontFace:"Calibri",rowH:.28});
+    const s3=pptx.addSlide();s3.background={color:D};s3.addShape(pptx.ShapeType.rect,{x:0,y:0,w:13.33,h:.55,fill:{color:C}});s3.addText("Workshop Notes Summary",{x:.3,y:.08,w:10,h:.38,fontSize:15,bold:true,color:W,fontFace:"Calibri"});
+    let ny=.75;this.activePillars.filter(p=>this.notesOnPillar(p.name).length>0).forEach(p=>{s3.addText(p.name+" ("+this.notesOnPillar(p.name).length+")",{x:.3,y:ny,w:12.73,h:.28,fontSize:10,bold:true,color:O,fontFace:"Calibri"});ny+=.3;this.notesOnPillar(p.name).forEach(n=>{s3.addText("  • "+n.text.substring(0,120),{x:.5,y:ny,w:12.3,h:.24,fontSize:8,color:G,fontFace:"Calibri"});ny+=.26;});ny+=.1;});
+    if(ny<.9){s3.addText("(ຍັງບໍ່ມີ Notes ໃນ Pillar — ໄປ Workshop Board ເພື່ອເພີ່ມ)",{x:.3,y:1,w:12.73,h:.4,fontSize:10,color:G,italic:true,fontFace:"Calibri"});}
+    await pptx.writeFile({fileName:"MyGoals_Dashboard_"+new Date().toISOString().slice(0,10)+".pptx"});
+    this.showToast("Export PPTX ສຳເລັດ! ✅");
+  }
+};}
+</script>
+</body>
+</html>
