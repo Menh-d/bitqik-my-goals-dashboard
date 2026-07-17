@@ -504,8 +504,61 @@ html.light .theme-toggle-knob{transform:translateX(18px)}
         </div>
       </div>
 
-      <!-- Fishbone Drop Targets strip -->
-      <div class="neu-card p-3 rounded-2xl" x-show="activePillars.length>0">
+      <!-- Fishbone Drop Targets Board -->
+      <div class="neu-card p-4 rounded-2xl relative overflow-hidden hidden lg:block" x-show="activePillars.length>0" style="height:300px">
+        <p class="text-[10px] font-semibold mb-1" style="color:var(--muted)">🎯 ລາກ Sticky Note ຈາກດ້ານລຸ່ມ ມາຢອດໃສ່ກ້າງປາ (Pillars) ເພື່ອວິເຄາະ:</p>
+        
+        <!-- Fishbone SVG Outline -->
+        <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 270" preserveAspectRatio="xMidYMid meet">
+          <!-- Spine -->
+          <line class="spine-anim" x1="80" y1="135" x2="880" y2="135" stroke="#F47A20" stroke-width="3" stroke-dasharray="6,3"/>
+          <polygon points="880,128 902,135 880,142" fill="#F47A20"/>
+          
+          <!-- Fish Head -->
+          <path d="M885,85 C920,85 960,110 975,135 C960,160 920,185 885,185 Z" fill="none" :stroke="'var(--border)'" stroke-width="2"/>
+          <circle cx="925" cy="120" r="4.5" fill="#F47A20"/>
+          <path d="M940,145 C930,150 915,148 910,143" fill="none" :stroke="'var(--border)'" stroke-width="1.5"/>
+
+          <!-- Fish Tail -->
+          <path d="M80,135 L30,85 L45,135 L30,185 Z" fill="none" :stroke="'var(--border)'" stroke-width="2"/>
+          
+          <!-- Dynamic Bones -->
+          <template x-for="(line, idx) in getWorkshopBones()" :key="idx">
+            <line :x1="line.x1" :y1="line.y1" :x2="line.x2" :y2="line.y2" :stroke="'var(--border)'" stroke-width="1.5" stroke-dasharray="3,3"/>
+          </template>
+        </svg>
+
+        <!-- Drop Zone boxes positioned absolutely -->
+        <div class="relative w-full h-full">
+          <template x-for="(pillar, i) in activePillars" :key="pillar.name">
+            <div class="drop-zone absolute neu-inset p-2 cursor-pointer transition-all flex flex-col justify-between"
+                 :style="workshopPillarStyle(i)"
+                 @dragover.prevent="dragOverPillar=pillar.name"
+                 @dragleave="dragOverPillar=null"
+                 @drop.prevent="dropOnPillar(pillar.name,$event)"
+                 :class="dragOverPillar===pillar.name ? 'drag-over' : ''">
+              <!-- Pillar Header -->
+              <div class="flex items-center gap-1.5 font-bold text-[10px]" :style="`color:${pillar.color}`">
+                <i :data-lucide="pillar.icon" class="w-3.5 h-3.5"></i>
+                <span x-text="pillar.name"></span>
+              </div>
+              
+              <!-- Count badge -->
+              <span class="absolute -top-1.5 -right-1.5 neu-badge px-1.5 py-0.5 text-[8px] font-bold text-white animate-pulse" style="background:#F47A20" x-text="notesOnPillar(pillar.name).length"></span>
+              
+              <!-- Notes preview list -->
+              <div class="flex-grow overflow-y-auto mt-1 space-y-1 max-h-[38px] pr-1">
+                <template x-for="note in notesOnPillar(pillar.name)" :key="note.id">
+                  <div class="text-[8px] px-1.5 py-0.5 rounded truncate" :style="`background:${note.color}40;color:var(--text)`" x-text="note.text || '(ຫວ່າງ)'"></div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Mobile Drop Targets strip -->
+      <div class="neu-card p-3 rounded-2xl block lg:hidden" x-show="activePillars.length>0">
         <p class="text-[10px] font-semibold mb-2" style="color:var(--muted)">🎯 ລາກ Note ໃສ່ Pillar ດ້ານລຸ່ມ:</p>
         <div class="flex flex-wrap gap-2">
           <template x-for="pillar in activePillars" :key="pillar.name">
@@ -770,6 +823,53 @@ function app(){return{
     const x=45+idx*spacing;
     const y=isTop?5:310;
     return `left:${x}px;top:${y}px;`;
+  },
+
+  workshopPillarStyle(i){
+    const total = this.activePillars.length;
+    const topN = Math.ceil(total / 2);
+    const isTop = i < topN;
+    const idx = isTop ? i : i - topN;
+    const count = isTop ? topN : (total - topN);
+    const X_start = 120;
+    const X_end = 760;
+    const spacing = count > 1 ? (X_end - X_start) / (count - 1) : 0;
+    const x = count > 1 ? (X_start + idx * spacing) : (X_start + X_end) / 2;
+    const y = isTop ? 18 : 178;
+    return `left:${x}px;top:${y}px;width:145px;height:75px;`;
+  },
+
+  getWorkshopBones(){
+    const total = this.activePillars.length;
+    const topN = Math.ceil(total / 2);
+    const bones = [];
+    const X_start = 120;
+    const X_end = 760;
+    
+    for (let i = 0; i < total; i++) {
+      const isTop = i < topN;
+      const idx = isTop ? i : i - topN;
+      const count = isTop ? topN : (total - topN);
+      const spacing = count > 1 ? (X_end - X_start) / (count - 1) : 0;
+      const x = count > 1 ? (X_start + idx * spacing) : (X_start + X_end) / 2;
+      
+      if (isTop) {
+        bones.push({
+          x1: x + 72,
+          y1: 93,
+          x2: x + 120,
+          y2: 135
+        });
+      } else {
+        bones.push({
+          x1: x + 72,
+          y1: 178,
+          x2: x + 120,
+          y2: 135
+        });
+      }
+    }
+    return bones;
   },
 
   /* ── THEME ── */
