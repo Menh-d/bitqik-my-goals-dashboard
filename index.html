@@ -457,28 +457,62 @@ html.light .theme-toggle-knob{transform:translateX(18px)}
         </template>
       </div>
       <!-- Detail Drawer -->
-      <div x-show="selectedPillar" x-transition class="neu-card rounded-2xl p-5" style="border-left:3px solid var(--primary)">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="text-sm font-bold flex items-center gap-2" style="color:var(--text)"><i data-lucide="layers" class="w-4 h-4" style="color:var(--primary)"></i>ລາຍລະອຽດ: <span style="color:var(--primary)" class="ml-1" x-text="selectedPillar"></span></h3>
-          <button @click="selectedPillar=null" class="neu-btn p-1.5 rounded-lg"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+      <div x-show="selectedPillar" x-transition class="neu-card rounded-2xl p-6 shadow-2xl" style="border-left:4px solid var(--primary)">
+        <div class="flex justify-between items-center mb-5 border-b pb-3" style="border-color:var(--border)">
+          <h3 class="text-base md:text-lg font-extrabold flex items-center gap-2" style="color:var(--text)">
+            <i data-lucide="layers" class="w-5 h-5 animate-pulse" style="color:var(--primary)"></i>
+            ລາຍລະອຽດການວິເຄາະ: <span style="color:var(--primary)" class="ml-1" x-text="selectedPillar"></span>
+          </h3>
+          <button @click="selectedPillar=null" class="neu-btn px-3 py-1.5 rounded-xl flex items-center gap-1 text-xs font-bold">
+            <i data-lucide="x" class="w-4 h-4"></i> ປິດ
+          </button>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <template x-for="item in itemsByCat(selectedPillar)" :key="item.id">
-            <div class="neu-flat p-4 rounded-xl">
-              <div class="flex justify-between items-center mb-2">
-                <span :class="item.priority==='High'?'text-red-500':'text-amber-500'" class="neu-badge text-[9px] px-2 py-0.5 rounded font-bold" x-text="item.priority"></span>
-                <span class="text-[9px] font-semibold" style="color:var(--primary)" x-text="item.phase"></span>
+            <div class="neu-flat p-5 rounded-2xl border" :style="`border-color:${item.priority==='High'?'rgba(246,70,93,0.15)':'var(--border)'}`">
+              <div class="flex justify-between items-center mb-3">
+                <span :class="item.priority==='High'?'text-red-500':'text-amber-500'" class="neu-badge text-xs px-2.5 py-0.5 rounded-lg font-bold" x-text="item.priority"></span>
+                <span class="text-xs font-semibold" style="color:var(--primary)" x-text="item.phase"></span>
               </div>
-              <p class="text-xs font-semibold mb-1" style="color:var(--text)"><span style="color:var(--rose)">ບັນຫາ:</span> <span x-text="item.issue"></span></p>
-              <p class="text-[10px] mb-2" style="color:var(--muted)"><span style="color:var(--text)">ຜົນ:</span> <span x-text="item.impact"></span></p>
-              <div class="neu-inset p-2.5 rounded-xl"><p class="text-[9px] font-bold mb-1" style="color:var(--primary)">💡 ແນວທາງ:</p><p class="text-[10px]" style="color:var(--text)" x-text="item.action"></p></div>
-              <div class="flex justify-between items-center mt-3 pt-2" style="border-top:1px solid var(--border)">
-                <label class="flex items-center gap-1 text-[10px] cursor-pointer" style="color:var(--muted)"><input type="checkbox" x-model="item.completed" @change="save()" class="w-3.5 h-3.5 rounded">ສຳເລັດ</label>
-                <button @click="openEdit(item)" class="neu-btn p-1.5 rounded-lg"><i data-lucide="pencil" class="w-3.5 h-3.5"></i></button>
+              
+              <!-- Issue / Root Cause -->
+              <div class="mb-3">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-red-500/80 block mb-0.5">⚠️ ບັນຫາ / Root Cause:</span>
+                <p class="text-sm font-semibold leading-relaxed" style="color:var(--text)" x-text="item.issue"></p>
+              </div>
+
+              <!-- Impact -->
+              <div class="mb-4 pl-2 border-l-2 border-amber-500/30">
+                <span class="text-[10px] font-bold uppercase tracking-wider block mb-0.5" style="color:var(--muted)">💥 ຜົນກະທົບ / Impact:</span>
+                <p class="text-xs md:text-sm leading-relaxed" style="color:var(--muted)" x-text="item.impact"></p>
+              </div>
+
+              <!-- Action / Guideline -->
+              <div class="neu-inset p-4 rounded-xl border border-orange-500/10" style="background:rgba(244,122,32,0.03)">
+                <span class="text-xs font-extrabold uppercase tracking-wide flex items-center gap-1 mb-1.5" style="color:var(--primary)">
+                  <i data-lucide="lightbulb" class="w-4 h-4 flex-shrink-0"></i> ແຜນແກ້ໄຂ ແລະ ແນວທາງ (Action Plan):
+                </span>
+                <p class="text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium" style="color:var(--text)" x-text="item.action"></p>
+              </div>
+
+              <!-- Item Footer Actions -->
+              <div class="flex justify-between items-center mt-4 pt-3 border-t" style="border-color:var(--border)">
+                <label class="flex items-center gap-1.5 text-xs font-semibold cursor-pointer" style="color:var(--muted)">
+                  <input type="checkbox" x-model="item.completed" @change="save()" class="w-4 h-4 rounded cursor-pointer">
+                  ໝາຍວ່າສຳເລັດ (Done)
+                </label>
+                <div class="flex gap-1.5">
+                  <button @click="openEdit(item)" class="neu-btn px-2.5 py-1.5 rounded-xl flex items-center gap-1 text-[11px] font-bold" style="color:var(--blue)">
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i> ແກ້ໄຂ
+                  </button>
+                </div>
               </div>
             </div>
           </template>
-          <div x-show="itemsByCat(selectedPillar).length===0" class="col-span-2 py-8 text-center text-sm" style="color:var(--muted)">ຍັງບໍ່ມີຂໍ້ມູນ</div>
+          <div x-show="itemsByCat(selectedPillar).length===0" class="col-span-2 py-12 text-center text-sm" style="color:var(--muted)">
+            <i data-lucide="folder-open" class="w-12 h-12 mx-auto mb-2 opacity-25"></i>
+            ຍັງບໍ່ມີຂໍ້ມູນການວິເຄາະໃນໝວດນີ້
+          </div>
         </div>
       </div>
     </div>
@@ -991,19 +1025,19 @@ function app(){return{
   catColor(cat){const m={Man:"text-orange-500",Machine:"text-cyan-500",Method:"text-pink-500",Material:"text-emerald-500",Measurement:"text-purple-500","Mother Nature":"text-blue-500",Product:"text-orange-500",Process:"text-cyan-500",Marketing:"text-pink-500",Pricing:"text-emerald-500",People:"text-purple-500",Competition:"text-blue-500"};return m[cat]||"text-gray-400";},
 
   defaultItems(){return[
-    {id:1,category:"Product",issue:"UI ແຕກຕ່າງຈາກ Platform ຄຸ້ນ",impact:"ຜູ້ໃຊ້ໃໝ່ສັບສົນ",action:"ອອກແບບ UI ໃໝ່ Industry Standards",priority:"High",phase:"Phase 2",completed:false},
-    {id:2,category:"Product",issue:"UX ບໍ່ໄຫຼລື່ນ ຂັ້ນຕອນຫຼາຍ",impact:"Drop-off Rate ສູງ",action:"ຫຼຸດ Steps ຊື້-ຂາຍ One-click",priority:"High",phase:"Phase 2",completed:false},
-    {id:3,category:"Product",issue:"Feature ຫາຍາກ",impact:"ຜູ້ໃຊ້ບໍ່ຮູ້ Feature",action:"ປັບ Navigation ໃຫ້ Feature ຫຼັກເຫັນ",priority:"Medium",phase:"Phase 2",completed:false},
-    {id:4,category:"Process",issue:"KYC Manual ຊ້າ",impact:"ລູກຄ້າລໍດົນ",action:"e-KYC ອັດຕະໂນມັດ + Auto Withdraw",priority:"High",phase:"Phase 2",completed:false},
-    {id:5,category:"Process",issue:"Automation ບໍ່ຄົບ",impact:"ຄວາມໜ້າເຊື່ອຖືຫຼຸດ",action:"Auto-Ticket System",priority:"Medium",phase:"Phase 1",completed:false},
-    {id:6,category:"Marketing",issue:"ຄົນຍັງບໍ່ເຂົ້າໃຈ Crypto",impact:"ກຸ່ມເປົ້າໝາຍກ້ານ",action:"Bitqik Academy + TikTok/Reels",priority:"High",phase:"Phase 2",completed:false},
-    {id:7,category:"Marketing",issue:"Brand Awareness ຕ່ຳ",impact:"ຄົນບໍ່ຮູ້ຈັກ Bitqik",action:"PR Campaign ຄວາມປອດໄພ",priority:"Medium",phase:"Phase 3",completed:false},
-    {id:8,category:"Pricing",issue:"ຄ່າທຳນຽມສູງ",impact:"ຜູ້ໃຊ້ໄປ Platform ອື່ນ",action:"ປັບ Fee ຕ່ຳກວ່າຄູ່ແຂ່ງ",priority:"High",phase:"Phase 1",completed:false},
-    {id:9,category:"Pricing",issue:"ຂາດ Fee Transparency",impact:"ຮູ້ສຶກຖືກເອົາປຽບ",action:"ໜ້າ Fee ລາຍລະອຽດ",priority:"High",phase:"Phase 1",completed:false},
-    {id:10,category:"People",issue:"Support ບໍ່ພຽງພໍ",impact:"ຮູ້ສຶກຖືກທອດທິ້ງ",action:"ທີມ Support + Chatbot 24h",priority:"High",phase:"Phase 1",completed:false},
-    {id:11,category:"People",issue:"Community ໜ້ອຍ",impact:"ຂາດ Word-of-Mouth",action:"Community + Influencer ລາວ",priority:"Medium",phase:"Phase 3",completed:false},
-    {id:12,category:"Competition",issue:"Platform ອື່ນ Feature ຫຼາຍ",impact:"Advanced Users ຫຼຸດ",action:"Staking, Launchpad, Alerts",priority:"Medium",phase:"Phase 3",completed:false},
-    {id:13,category:"Competition",issue:"ຄູ່ແຂ່ງ Promotion ແຮງ",impact:"ດຶງ User ໃໝ່ຍາກ",action:"Zero-Fee ຄັ້ງທຳອິດ + Referral",priority:"High",phase:"Phase 1",completed:false}
+    {id:1,category:"Product",issue:"ໂຄງສ້າງການຈັດວາງ UI (User Interface) ແລະ ຕຳແໜ່ງປຸ່ມສັ່ງຊື້-ຂາຍ ຍັງບໍ່ເປັນໄປຕາມຫຼັກສາກົນ ແລະ ແຕກຕ່າງຈາກ Platform ທີ່ລູກຄ້າສ່ວນໃຫຍ່ຄຸ້ນເຄີຍ (ເຊັ່ນ Binance, TradingView)",impact:"ຜູ້ໃຊ້ໃໝ່ທີ່ຍ້າຍມາຈາກ Platform ອື່ນເກີດຄວາມສັບສົນໃນການສົ່ງ Order, ເຮັດໃຫ້ເກີດຄວາມຜິດພາດໃນການຊື້-ຂາຍ ແລະ ສົ່ງຜົນໃຫ້ Trading Volume ຫຼຸດລົງ",action:"1. ດຳເນີນການເຮັດ UX Research ແລະ Benchmark ກັບ Platform ຊັ້ນນຳລະດັບໂລກ ເພື່ອຈັດກຸ່ມຂໍ້ມູນ (Information Architecture).\n2. ປັບປຸງ UI Layout ໂດຍເນັ້ນການຈັດວາງປຸ່ມ Buy/Sell, Order Book ແລະ Chart ໃຫ້ເປັນມາດຕະຖານດຽວກັນ.\n3. ສ້າງໂໝດ Simple / Pro Version ເພື່ອໃຫ້ເໝາະສົມກັບທັງນັກເທຣດມືໃໝ່ ແລະ ມືອາຊີບ.",priority:"High",phase:"Phase 2",completed:false},
+    {id:2,category:"Product",issue:"ຂັ້ນຕອນ ແລະ UX flow ພາຍໃນ App ມີຄວາມຊັບຊ້ອນຫຼາຍເກີນໄປ ໂດຍສະເພາະຂັ້ນຕອນການຝາກ-ຖອນເງິນ ແລະ ການກວດສອບທຸລະກຳ",impact:"Drop-off Rate (ອັດຕາການອອກຈາກ App ກາງຄັນ) ຂອງລູກຄ້າສູງເຖິງ 42% ແລະ ເພີ່ມພາລະໃຫ້ແກ່ Customer Support ທີ່ຕ້ອງຕອບຄຳຖາມຊ້ຳໆ",action:"1. ຫຼຸດຂັ້ນຕອນການເຮັດທຸລະກຳໃຫ້ເຫຼືອໜ້ອຍທີ່ສຸດ (One-click Deposit/Withdrawal).\n2. ປັບປຸງ UI ໃຫ້ມີລະບົບ Progress Indicator ທີ່ຊັດເຈນໃນແຕ່ລະຂັ້ນຕອນ.\n3. ເພີ່ມ Interactive Tooltips ເພື່ອອະທິບາຍຂັ້ນຕອນຢ່າງງ່າຍດາຍ.",priority:"High",phase:"Phase 2",completed:false},
+    {id:3,category:"Product",issue:"ຄຸນສົມບັດຫຼັກ (Core Features) ເຊັ່ນ ການຕັ້ງລາຄາເຕືອນ (Price Alerts) ຫຼື ການເບິ່ງປະຫວັດການລົງທຶນ (Portfolio Tracking) ຖືກຊ່ອນໄວ້ເລິກເກີນໄປ",impact:"ຜູ້ໃຊ້ສ່ວນໃຫຍ່ບໍ່ຮູ້ວ່າ App ມີ Features ເຫຼົ່ານີ້, ເຮັດໃຫ້ມີການນຳໃຊ້ App ຕ່ຳ (Low Engagement Rate) ແລະ ຂາດຄວາມໂດດເດັ່ນໃນການແຂ່ງຂັນ",action:"1. ປັບປຸງແຖບເມນູຫຼັກ (Bottom Navigation Bar) ເພື່ອໃຫ້ Features ຍອດນິຍົມເຂົ້າເຖິງໄດ້ໃນ 1 ແຕະ.\n2. ເຮັດລະບົບແນະນຳ Feature ໃໝ່ (Feature Walkthrough) ໃຫ້ກັບລູກຄ້າຫຼັງຈາກການອັບເດດ App.\n3. ຈັດວາງ Widgets ທີ່ສຳຄັນໄວ້ໃນໜ້າ Home Page.",priority:"Medium",phase:"Phase 2",completed:false},
+    {id:4,category:"Process",issue:"ຂັ້ນຕອນການຢືນຢັນຕົວຕົນ (KYC) ຍັງເປັນລະບົບ Manual ທັງໝົດ ເຮັດໃຫ້ການອະນຸມັດບັນຊີລູກຄ້າໃໝ່ມີຄວາມຊັກຊ້າ (ສະເລ່ຍ 24-48 ຊົ່ວໂມງ) ແລະ ຂາດການເຊື່ອມຕໍ່ກັບຖານຂໍ້ມູນທະນາຄານແບບ Real-time",impact:"ລູກຄ້າໃໝ່ຍົກເລີກການລົງທະບຽນກາງຄັນ (Drop-off Rate ສູງເຖິງ 35%), ຂາດໂອກາດໃນການເຮັດທຸລະກຳໃນຊ່ວງຕະຫຼາດຜັນຜວນ, ແລະ ທີມ Back-office ຕ້ອງແບກຮັບພາລະວຽກເອກະສານຢ່າງຫຼວງຫຼາຍ",action:"1. ພັດທະນາລະບົບ e-KYC ໂດຍການນຳໃຊ້ AI ເພື່ອສະແກນໃບໜ້າ ແລະ ກວດສອບບັດປະຊາຊົນ/Passport ແບບອັດຕະໂນມັດ (Real-time OCR).\n2. ເຈລະຈາ ແລະ ເຊື່ອມຕໍ່ API ກັບຖານຂໍ້ມູນທະນາຄານຄູ່ຄ້າເພື່ອຢືນຢັນຄວາມຖືກຕ້ອງຂອງບັນຊີທະນາຄານທັນທີ.\n3. ປັບປຸງຂະບວນການຖອນເງິນໃຫ້ເປັນ Auto-Withdrawal ສໍາລັບທຸລະກຳທີ່ມີມູນຄ່າຕ່ຳກວ່າເກນທີ່ກຳນົດ ເພື່ອຫຼຸດເວລະລໍຖ້າຂອງລູກຄ້າເຫຼືອບໍ່ເກີນ 5 ນາທີ.",priority:"High",phase:"Phase 2",completed:false},
+    {id:5,category:"Process",issue:"ຂະບວນການຕິດຕາມ ແລະ ແກ້ໄຂບັນຫາໃຫ້ລູກຄ້າ (Customer Support) ຂາດລະບົບອັດຕະໂນມັດ (Automation) ເຮັດໃຫ້ການສົ່ງຕໍ່ປີ້ວຽກ (Tickets) ລະຫວ່າງທີມງານ Front-support ແລະ Tech-support ຫຼົ້ມເຫຼວ ແລະ ບໍ່ສາມາດກວດສອບ SLA ໄດ້",impact:"ລູກຄ້າໄດ້ຮັບການແກ້ໄຂບັນຫາຊັກຊ້າ (ບາງກໍລະນີເກີນ 3 ວັນ), ເຮັດໃຫ້ຄວາມພຶງພໍໃຈຂອງລູກຄ້າ (CSAT) ຫຼຸດລົງເຫຼືອ 62%, ແລະ ເກີດການຮ້ອງຮຽນໃນກຸ່ມ Community ຫຼາຍຂຶ້ນ",action:"1. ຕິດຕັ້ງລະບົບ Auto-Ticket Management System (ເຊັ່ນ Zendesk ຫຼື Freshdesk) ເພື່ອອອກປີ້ວຽກອັດຕະໂນມັດເມື່ອລູກຄ້າແຈ້ງບັນຫາ.\n2. S້າງລະບົບ Auto-Routing Rules ເພື່ອສົ່ງຕໍ່ບັນຫາໄປຫາແຜນກທີ່ກ່ຽວຂ້ອງໂດຍກົງຕາມໝວດໝູ່ຂອງບັນຫາ (ເຊັ່ນ ບັນຫາການຝາກ-ຖອນ, ບັນຫາລະບົບລັອກອິນ).\n3. ຕັ້ງຄ່າ Auto-Escalation Alert ຜ່ານ Telegram/Slack ຫາກປີ້ວຽກລະດັບ High Priority ບໍ່ໄດ້ຮັບການແກ້ໄຂພາຍໃນ 1 ຊົ່ວໂມງ.",priority:"Medium",phase:"Phase 1",completed:false},
+    {id:6,category:"Marketing",issue:"ຜູ້ໃຊ້ງານທົ່ວໄປໃນປະເທດລາວຍັງຂາດຄວາມຮູ້ ແລະ ຄວາມເຂົ້າໃຈທີ່ຖືກຕ້ອງກ່ຽວກັບຄວາມສ່ຽງ ແລະ ໂອກາດໃນຕະຫຼາດສິນຊັບດิຈິຕອນ (Crypto/Web3)",impact:"ກຸ່ມລູກຄ້າເປົ້າໝາຍມີຄວາມກັງວົນ ແລະ ບໍ່ກ້າເລີ່ມຕົ້ນລົງທຶນ, ເຮັດໃຫ້ການຂະຫຍາຍຕົວຂອງຖານຜູ້ໃຊ້ງານໃໝ່ (User Acquisition Rate) ເປັນໄປໄດ້ຊ້າ",action:"1. ສ້າງໂຄງການ 'Bitqik Academy' ຜະລິດສື່ວິດີໂອສັ້ນ (TikTok, Reels, Shorts) ເພື່ອໃຫ້ຄວາມຮູ້ແບບງ່າຍໆ ແລະ ຟຣີ.\n2. ຈັດກິດຈະກຳ Quiz & Earn ເພື່ອດຶງດູດໃຫ້ຜູ້ໃຊ້ເຂົ້າມາຮຽນຮູ້ ແລະ ຮັບລາງວັນເປັນລາຍການສິນຊັບຂະໜາດນ້ອຍ.\n3. ຮ່ວມມືກັບມະຫາວິທະຍາໄລເພື່ອຈັດສຳມະນາໃຫ້ຄວາມຮູ້ແກ່ນັກສຶກສາ.",priority:"High",phase:"Phase 2",completed:false},
+    {id:7,category:"Marketing",issue:"ການຮັບຮູ້ຍີ່ຫໍ້ (Brand Awareness) ຂອງ Bitqik ໃນກຸ່ມໄວເຮັດວຽກ ແລະ ຜູ້ສູງອາຍຸຍັງມີໜ້ອຍ ແລະ ຂາດການເນັ້ນໜັກດ້ານຄວາມປອດໄພຂອງລະບົບ",impact:"ລູກຄ້າທີ່ມີກຳລັງຊື້ສູງເລືອກທີ່ຈະນຳໃຊ້ເວທີແລກປ່ຽນຕ່າງປະເທດທີ່ເຂົາເຈົ້າຮູ້ສຶກປອດໄພກວ່າ, ເຮັດໃຫ້ Bitqik ຂາດລາຍຮັບຈາກກຸ່ມ VIP/Whales",action:"1. ເປີດໂຕ PR Campaign ໃຫຍ່ພາຍໃຕ້ຫົວຂໍ້ 'ຄວາມປອດໄພ ແລະ ຄວາມຖືກຕ້ອງຕາມກົດໝາຍໃນລາວ'.\n2. ຜະລິດ Content ກ່ຽວກັບໃບອະນຸຍາດ ແລະ ການກວດສອບຄວາມປອດໄພຈາກ Audit Firm ຊັ້ນນຳ.\n3. ຈັດກິດຈະກຳ Meetup/Networking ສໍາລັບກຸ່ມນັກລົງທຶນລາຍໃຫຍ່.",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:8,category:"Pricing",issue:"ຄ່າທຳນຽມການເຮັດທຸລະກຳ (Trading/Withdrawal Fees) ໃນບາງຄູ່ຫຼຽນມີອັດຕາທີ່ສູງ ແລະ ບໍ່ສາມາດແຂ່ງຂັນກັບເວທີຕ່າງປະເທດໄດ້",impact:"ນັກເທຣດມືອາຊີບ (High-volume Traders) ຍ້າຍຖານການຊື້-ຂາຍໄປຍັງ Platform ອື່ນ, ເຮັດໃຫ້ Bitqik ສູນເສຍຄ່າທຳນຽມການເທຣດໃນປະລິມານຫຼາຍ",action:"1. ປັບປຸງໂຄງສ້າງຄ່າທຳນຽມໃຫ້ມີລະບົບ VIP Tier System (ຍິ່ງເທຣດຫຼາຍ ຄ່າທຳນຽມຍິ່ງຫຼຸດ).\n2. ຈັດແຄມເປນ 'Zero-Fee' ສໍາລັບຄູ່ຫຼຽນຫຼັກໃນບາງຊ່ວງເວລາເພື່ອດຶງດູດ User ໃໝ່.\n3. ຫຼຸດຄ່າທຳນຽມການຝາກເງິນກີບໃຫ້ເປັນ 0%.",priority:"High",phase:"Phase 1",completed:false},
+    {id:9,category:"Pricing",issue:"การສະແດງລາຍລະອຽດຂອງຄ່າທຳນຽມ (Fee Structure) ກ່ອນການກົດຢືນຢັນ Order ຍັງຂາດຄວາມໂປ່ງໃສ ແລະ ບໍ່ມີການແຍກແຍะຄ່າ Gas/Network Fee ຢ່າງຊັດເຈນ",impact:"ລູກຄ້າມັກຈະຮູ້ສຶກວ່າຖືກເອົາປຽບ ຫຼື ຖືກເກັບຄ່າບໍລິການແຝງ (Hidden Fees) ສົ່ງຜົນໃຫ້ເກີດຄວາມບໍ່ເຊື່ອໝັ້ນຕໍ່ Platform",action:"1. ອອກແບບ UI ໜ້າ Confirm Order ໃໝ່ ໃຫ້ສະແດງລາຍລະອຽດຄ່າທຳນຽມທຸກຢ່າງຢ່າງຈະແຈ້ງ.\n2. ເພີ່ມປຸ່ມ tooltip (?) ເພື່ອອະທິບາຍວິທີຄິດໄລ່ຄ່າທຳນຽມໃນແຕ່ລະປະເພດ.\n3. ສ້າງໜ້າເວັບໄຊ້ສະແດງລາຍການຄ່າທຳນຽມທັງໝົດແບບ Real-time.",priority:"High",phase:"Phase 1",completed:false},
+    {id:10,category:"People",issue:"ຈຳນວນພະນັກງານໃນແຜນກ Customer Support ບໍ່ພຽງພໍຕໍ່ອັດຕາການເຕີບໂຕຂອງຜູ້ໃຊ້ງານ ແລະ ພະນັກງານບາງສ່ວນຍັງຂາດຄວາມຮູ້ເລິກເຊິ່ງກ່ຽວກັບ Blockchain",impact:"ລູກຄ້າຕ້ອງລໍຖ້າຄິວໃນ Live Chat ດົນ (ສະເລ່ຍ 30-45 ນາທີ), ໄດ້ຮັບຄຳຕອບທີ່ບໍ່ກົງປະເດັນ, ເຮັດໃຫ້ CSAT ແລະ ຄວາມໜ້າເຊື່ອຖືຫຼຸດລົງ",action:"1. ຮັບສະໝັກພະນັກງານ Support ເພີ່ມ ແລະ ຈັດລະບົບເຮັດວຽກເປັນ 3 ກະ (24/7).\n2. ພັດທະນາ ແລະ ຝຶກອົບຮົມ AI Chatbot ເພື່ອຊ່ວຍຕອບຄຳຖາມທົ່ວໄປ (FAQ) ເພື່ອຫຼຸດຄິວລໍຖ້າ.\n3. ຈັດຫຼັກສູດການຝຶກອົບຮົມ Blockchain & Crypto ພາກບັງຄັບໃຫ້ກັບທີມ Support ທຸກຄົນ.",priority:"High",phase:"Phase 1",completed:false},
+    {id:11,category:"People",issue:"ຊ່ອງທາງ Community ຫຼັກ (Telegram, Facebook Group) ຍັງຂາດການເຄື່ອນໄຫວຢ່າງເປັນລະບົບ ແລະ ຂາດ Mod/Admin ຄອຍດູແລ ແລະ ຕອບຄຳຖາມໃນທັນທີ",impact:"ເກີດຂໍ້ມູນທີ່ບໍ່ຖືກຕ້ອງ (FUD/Spam) ໃນ Community ໂດຍບໍ່ໄດ້ຮັບການແກ້ໄຂ, ເຮັດໃຫ້ພາບລັກຂອງແບຣນເສຍຫາຍ ແລະ ຜູ້ໃຊ້ຮູ້ສຶກຖືກທອດທິ້ງ",action:"1. ແຕ່ງຕັ້ງ Official Community Managers ຄອຍມໍນິເຕີ ແລະ ຕອບຄໍາຖາມຕະຫຼອດ 16 ຊົ່ວໂມງ/ມື້.\n2. ຈັດກິດຈະກຳປະຈຳອາທິດ ເຊັ່ນ AMA (Ask Me Anything) ກັບຜູ້ບໍລິຫານ ຫຼື ນັກວິເຄາະ.\n3. ສ້າງລະບົບ Community Incentives ສໍາລັບຜູ້ທີ່ຊ່ວຍເຫຼືອຄົນອື່ນໃນກຸ່ມ.",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:12,category:"Competition",issue:"ຄູ່ແຂ່ງທັງພາຍໃນ ແລະ ຕ່າງປະເທດມີຜະລິດຕະພັນທີ່ຫຼາກຫຼາຍກວ່າ (ເຊັ່ນ Staking, Launchpad, ເຄື່ອງມືຊ່ວຍເທຣດ Auto-bot ງ່າຍໆ)",impact:"ຜູ້ໃຊ້ງານທີ່ມີປະສົບການ (Advanced/Professional Traders) ຫັນໄປໃຊ້ງານ Platform ອື່ນເພື່ອສ້າງຜົນຕອບແທນທີ່ຫຼາກຫຼາຍກວ່າ",action:"1. ເລັ່ງພັດທະນາ ແລະ ເປີດໂຕ Feature 'Bitqik Earn' (Staking/Saving) ເພື່ອໃຫ້ຜູ້ໃຊ້ໄດ້ຮັບດອກເບ້ຍ.\n2. ສ້າງລະບົບ Launchpad ເພື່ອສະໜັບສະໜູນ Project Token ໃໝ່ໆ ໃນປະເທດລາວ.\n3. ພັດທະນາລະບົບ Custom Alerts (ແຈ້ງເຕືອນລາຄາຜ່ານ SMS/Telegram).",priority:"Medium",phase:"Phase 3",completed:false},
+    {id:13,category:"Competition",issue:"ຄູ່ແຂ່ງມີແຄມເປນການຕະຫຼາດ ແລະ ໂປຣໂມຊັ່ນທີ່ຮຸນແຮງກວ່າ (ເຊັ່ນ: ການແຈກຫຼຽນ Airdrop ຟຣີ, ກິດຈະກຳ Trading Tournament ມູນຄ່າສູງ)",impact:"ເປັນການຍາກໃນການດຶງດູດຜູ້ໃຊ້ງານໃໝ່ ແລະ ຜູ້ໃຊ້ເກົ່າມີແນວໂນ້ມທີ່ຈະຫຼຸດການເຄື່ອນໄຫວລົງ ເມື່ອບໍ່ມີກິດຈະກຳໃໝ່ໆ",action:"1. ອອກແບບລະບົບ Referral Program ໃໝ່ ທີ່ໃຫ້ຜົນຕອບແທນທັງຜູ້ແນະນຳ ແລະ ຜູ້ຖືກແນະນຳ.\n2. ຈັດກິດຈະກຳ Trading Competition ປະຈຳເດືອນ ພ້ອມລາງວັນທີ່ໜ້າສົນໃຈ.\n3. ຮ່ວມມືກັບຮ້ານຄ້າຄູ່ຄ້າເພື່ອໃຫ້ສິດທິປະໂຫຍດພິເສດແກ່ຜູ້ໃຊ້ Bitqik.",priority:"High",phase:"Phase 1",completed:false}
   ];},
 
   async exportToPptx(){
